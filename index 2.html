@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>VOXEL DRIFT - 毎回変わる3D探索</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#0d1626;color:#eef4ff;font:14px/1.5 system-ui,-apple-system,"Hiragino Sans",sans-serif;touch-action:none;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+canvas{display:block}
+#hud{position:fixed;left:calc(12px + env(safe-area-inset-left));top:calc(10px + env(safe-area-inset-top));pointer-events:none;text-shadow:0 1px 4px #000;white-space:pre-line;z-index:2}
+#hp{width:140px;height:7px;background:#0006;margin-top:4px}
+#hpb{height:100%;background:#ff5d6c;width:100%}
+#cross{position:fixed;left:50%;top:50%;width:12px;height:12px;margin:-6px;border:2px solid #fffc;border-radius:50%;pointer-events:none;z-index:2}
+#tz{position:fixed;inset:0;z-index:1}
+#tb{display:none}
+#tb button,#ov button{font:inherit;color:#fff;-webkit-appearance:none;appearance:none}
+#tb button{position:fixed;z-index:3;border:2px solid #fff9;background:#0d162699;border-radius:50%;width:74px;height:74px;font-size:14px;font-weight:700;touch-action:none}
+#bj{right:calc(18px + env(safe-area-inset-right));bottom:calc(26px + env(safe-area-inset-bottom))}
+#bb{right:calc(18px + env(safe-area-inset-right));bottom:calc(112px + env(safe-area-inset-bottom));border-color:#ff8a8a!important}
+#bp{right:calc(104px + env(safe-area-inset-right));bottom:calc(70px + env(safe-area-inset-bottom));border-color:#8ad0ff!important}
+#bs{right:calc(12px + env(safe-area-inset-right));top:calc(54px + env(safe-area-inset-top));width:auto!important;height:auto!important;border-radius:8px!important;padding:6px 10px;font-size:12px!important}
+#bx{right:calc(12px + env(safe-area-inset-right));top:calc(8px + env(safe-area-inset-top));width:40px!important;height:40px!important;font-size:14px!important}
+#ov{position:fixed;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0d1626ee;text-align:center;padding:24px}
+#ov h1{font-size:38px;margin:0 0 8px;letter-spacing:.04em}
+#ov p{margin:4px 0 16px;max-width:420px;color:#b9c8e6}
+#ov button{margin:6px;padding:12px 30px;border:2px solid #ffd84a;background:none;color:#ffd84a;border-radius:6px;font-size:16px}
+#ov .sub{border-color:#8aa0c8;color:#b9c8e6;font-size:14px}#bc{display:flex;flex-direction:column;align-items:center}@media (max-height:500px){#bc{flex-direction:row;flex-wrap:wrap;justify-content:center}}
+#ov{overflow-y:auto}
+@media (max-height:500px){
+#ov{padding:8px}#ov h1{font-size:26px;margin:0}#ov p{margin:2px 0 6px;font-size:12px;max-width:620px}
+#ov button{padding:8px 24px;margin:3px;font-size:14px}
+#tb button{width:62px;height:62px;font-size:12px}
+#bj{bottom:calc(14px + env(safe-area-inset-bottom))}
+#bb{bottom:calc(86px + env(safe-area-inset-bottom))}
+#bp{right:calc(88px + env(safe-area-inset-right));bottom:calc(48px + env(safe-area-inset-bottom))}
+#hp{width:110px}
+}
+@media (min-width:700px) and (min-height:600px){
+#hud{font-size:18px}#hp{width:220px;height:9px}
+#tb button{width:96px;height:96px;font-size:17px}
+#bj{right:calc(30px + env(safe-area-inset-right));bottom:calc(40px + env(safe-area-inset-bottom))}
+#bb{right:calc(30px + env(safe-area-inset-right));bottom:calc(150px + env(safe-area-inset-bottom))}
+#bp{right:calc(140px + env(safe-area-inset-right));bottom:calc(95px + env(safe-area-inset-bottom))}
+#bs{font-size:16px!important;padding:9px 14px}
+#bx{width:52px!important;height:52px!important;font-size:18px!important}
+#ov h1{font-size:54px}#ov p{font-size:17px;max-width:560px}#ov button{font-size:20px;padding:14px 40px}
+}
+#ov #dr{display:flex;gap:6px;margin-bottom:10px;align-items:center;color:#b9c8e6}#ov #dr button{margin:0;padding:8px 12px;font-size:14px;border-color:#8aa0c8;color:#b9c8e6}#ov #dr button.on{border-color:#ffd84a;color:#ffd84a;background:#ffd84a22}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div id="hud"><span id="t"></span><div id="hp"><div id="hpb"></div></div></div>
+<div id="cross"></div>
+<div id="tz"></div>
+<div id="tb">
+<button id="bj">ジャンプ</button><button id="bb">壊す</button><button id="bp">置く</button><button id="bs"></button><button id="bx">||</button>
+</div>
+<div id="ov"><h1 id="ot">VOXEL DRIFT</h1><p id="os"></p><div id="bc"></div></div>
+<script>
+const $=id=>document.getElementById(id);
+onerror=(m,s,l)=>{$('os').textContent='エラー: '+m+' (行'+l+')';$('ov').style.display='flex'};
+document.addEventListener('gesturestart',e=>e.preventDefault());
+
+// ===== 乱数・ノイズ(シード式) =====
+let seed=0;
+const rng=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const hash=(x,y)=>{let h=Math.imul(x|0,374761393)+Math.imul(y|0,668265263)+seed|0;h=Math.imul(h^h>>>13,1274126177);return((h^h>>>16)>>>0)/4294967296};
+function vn(x,y){const xi=Math.floor(x),yi=Math.floor(y),xf=x-xi,yf=y-yi,u=xf*xf*(3-2*xf),v=yf*yf*(3-2*yf),
+ a=hash(xi,yi),b=hash(xi+1,yi),c=hash(xi,yi+1),d=hash(xi+1,yi+1);return a+(b-a)*u+(c-a)*v+(a-b-c+d)*u*v}
+const fbm=(x,y)=>vn(x*.05,y*.05)*.6+vn(x*.11,y*.11)*.3+vn(x*.25,y*.25)*.1;
+function hsl(h,s,l){const a=s*Math.min(l,1-l),f=n=>{const k=(n+h/30)%12;return l-a*Math.max(-1,Math.min(k-3,9-k,1))};return[f(0),f(8),f(4)]}
+
+// ===== ワールドデータ =====
+const W=64,D=64,H=32,V=new Uint8Array(W*D*H),TOP=new Int16Array(W*D);
+const I=(x,y,z)=>(y*D+z)*W+x;
+const inb=(x,y,z)=>x>=0&&x<W&&y>=0&&y<H&&z>=0&&z<D;
+const solid=(x,y,z)=>(y<0||x<0||x>=W||z<0||z>=D)?true:y>=H?false:V[I(x,y,z)]>0;
+const HOT=[3,4,6,7,5],HN=['石','砂','木','葉','雪'];
+let PAL=[],SKY=[.5,.7,.9];
+function colTop(x,z){let y=H-1;while(y>0&&!V[I(x,y,z)])y--;TOP[x+z*W]=y}
+
+// ===== WebGL(外部ライブラリなし) =====
+const cv=$('cv'),gl=cv.getContext('webgl',{antialias:true});
+if(!gl)throw new Error('WebGLが使えません');
+const VS='attribute vec3 p;attribute vec3 c;uniform mat4 m;uniform vec3 o;uniform float s,r;varying vec3 v;varying float d;void main(){float a=cos(r),b=sin(r);vec3 q=vec3(p.x*a+p.z*b,p.y,-p.x*b+p.z*a)*s+o;vec4 w=m*vec4(q,1.);gl_Position=w;d=w.w;v=c;}';
+const FS='precision mediump float;uniform vec3 k,f;varying vec3 v;varying float d;void main(){gl_FragColor=vec4(mix(v*k,f,clamp((d-22.)/58.,0.,1.)),1.);}';
+const pg=gl.createProgram();
+for(const[t,s]of[[gl.VERTEX_SHADER,VS],[gl.FRAGMENT_SHADER,FS]]){const x=gl.createShader(t);gl.shaderSource(x,s);gl.compileShader(x);
+ if(!gl.getShaderParameter(x,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(x));gl.attachShader(pg,x)}
+gl.bindAttribLocation(pg,0,'p');gl.bindAttribLocation(pg,1,'c');gl.linkProgram(pg);gl.useProgram(pg);
+const U=n=>gl.getUniformLocation(pg,n),uM=U('m'),uO=U('o'),uS=U('s'),uR=U('r'),uK=U('k'),uF=U('f');
+gl.enable(gl.DEPTH_TEST);
+let asp=1;
+function rs(){const d=Math.min(devicePixelRatio||1,2);cv.width=innerWidth*d;cv.height=innerHeight*d;cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';gl.viewport(0,0,cv.width,cv.height);asp=innerWidth/innerHeight}
+addEventListener('resize',rs);addEventListener('orientationchange',()=>setTimeout(rs,300));rs();
+function mul(a,b){const o=new Float32Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++){let s=0;for(let k=0;k<4;k++)s+=a[k*4+r]*b[c*4+k];o[c*4+r]=s}return o}
+function fwd(){const cp=Math.cos(pitch);return[-Math.sin(yaw)*cp,Math.sin(pitch),-Math.cos(yaw)*cp]}
+function viewProj(){
+ const f=fwd(),sy=Math.sin(yaw),cy=Math.cos(yaw),r=[cy,0,-sy],u=[sy*f[1],-sy*f[0]-cy*f[2],cy*f[1]],e=[pl.x,pl.y+1.6,pl.z],dd=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+ const Vw=[r[0],u[0],-f[0],0,r[1],u[1],-f[1],0,r[2],u[2],-f[2],0,-dd(r,e),-dd(u,e),dd(f,e),1];
+ const t=1/Math.tan(.65),n=.1,fa=120,P=[t/asp,0,0,0,0,t,0,0,0,0,(fa+n)/(n-fa),-1,0,0,2*fa*n/(n-fa),0];
+ return mul(P,Vw);
+}
+// [法線xyz, 原点xyz, uxyz, vxyz, 明るさ]
+const FC=[[1,0,0,1,0,0,0,1,0,0,0,1,.8],[-1,0,0,0,0,0,0,0,1,0,1,0,.8],[0,1,0,0,1,0,0,0,1,1,0,0,1],
+[0,-1,0,0,0,0,1,0,0,0,0,1,.5],[0,0,1,0,0,1,1,0,0,0,1,0,.68],[0,0,-1,0,0,0,0,1,0,1,0,0,.68]];
+function quad(A,x,y,z,f,c,s){
+ const Q=[];for(let k=0;k<4;k++){const a=(k==1||k==2)?1:0,b=k>=2?1:0;Q.push([x+f[3]+a*f[6]+b*f[9],y+f[4]+a*f[7]+b*f[10],z+f[5]+a*f[8]+b*f[11]])}
+ for(const k of[0,1,2,0,2,3])A.push(Q[k][0],Q[k][1],Q[k][2],c[0]*s,c[1]*s,c[2]*s);
+}
+const wBuf=gl.createBuffer(),cBuf=gl.createBuffer();let wN=0;
+{const A=[];for(const f of FC)quad(A,-.5,-.5,-.5,f,[1,1,1],f[12]);gl.bindBuffer(gl.ARRAY_BUFFER,cBuf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(A),gl.STATIC_DRAW)}
+function build(){ // 見える面だけをまとめて1メッシュに
+ const A=[];
+ for(let y=0;y<H;y++)for(let z=0;z<D;z++)for(let x=0;x<W;x++){
+  const t=V[I(x,y,z)];if(!t)continue;
+  const c=PAL[t],j=.88+.24*hash(x+y*97,z+y*31);
+  for(const f of FC)if(!solid(x+f[0],y+f[1],z+f[2]))quad(A,x,y,z,f,c,f[12]*j);
+ }
+ gl.bindBuffer(gl.ARRAY_BUFFER,wBuf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(A),gl.DYNAMIC_DRAW);wN=A.length/6;
+}
+function draw(buf,n,o,s,r,k){
+ gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.enableVertexAttribArray(0);gl.enableVertexAttribArray(1);
+ gl.vertexAttribPointer(0,3,gl.FLOAT,false,24,0);gl.vertexAttribPointer(1,3,gl.FLOAT,false,24,12);
+ gl.uniform3fv(uO,o);gl.uniform1f(uS,s);gl.uniform1f(uR,r);gl.uniform3fv(uK,k);gl.drawArrays(gl.TRIANGLES,0,n);
+}
+
+// ===== ワールド生成(シードごとに地形・色・水位・木の量が変わる) =====
+let EN=[],CR=[],R=Math.random;
+function gen(s){
+ seed=s|0;R=rng(seed^0x9e3779b9);
+ const amp=12+R()*16,wl=5+Math.floor(R()*6),tp=.004+R()*.02,gh=Math.floor(R()*360),sh=Math.floor(R()*360);
+ PAL=[0,hsl(gh,.45,.45),[.54,.35,.23],[.55,.56,.6],[.89,.84,.56],[.95,.97,1],[.48,.31,.18],hsl((gh+30)%360,.5,.32),[.23,.5,.82]];
+ SKY=hsl(sh,.5,.62);gl.clearColor(SKY[0],SKY[1],SKY[2],1);gl.uniform3fv(uF,SKY);
+ V.fill(0);
+ for(let z=0;z<D;z++)for(let x=0;x<W;x++){
+  const h=Math.min(22,Math.floor(2+Math.pow(fbm(x,z),2)*amp*2.2));
+  for(let y=0;y<=h;y++)V[I(x,y,z)]=y==0?3:y==h?(h<=wl+1?4:h>=18?5:h>=14?3:1):y>h-4?2:3;
+  for(let y=h+1;y<=wl;y++)V[I(x,y,z)]=8;
+ }
+ for(let z=3;z<D-3;z++)for(let x=3;x<W-3;x++){ // 木
+  if(R()>tp)continue;colTop(x,z);const h=TOP[x+z*W];if(V[I(x,h,z)]!=1)continue;
+  const t=3+Math.floor(R()*3);
+  for(let y=1;y<=t;y++)V[I(x,h+y,z)]=6;
+  for(let dx=-2;dx<=2;dx++)for(let dy=-2;dy<=2;dy++)for(let dz=-2;dz<=2;dz++)
+   if(dx*dx+dy*dy+dz*dz<=5&&inb(x+dx,h+t+dy,z+dz)&&!V[I(x+dx,h+t+dy,z+dz)])V[I(x+dx,h+t+dy,z+dz)]=7;
+ }
+ for(let z=0;z<D;z++)for(let x=0;x<W;x++)colTop(x,z);
+ build();
+}
+function rpos(minD){
+ for(let i=0;i<50;i++){const x=2+R()*(W-4),z=2+R()*(D-4);
+  if(Math.hypot(x-pl.x,z-pl.z)>=minD&&V[I(x|0,TOP[(x|0)+(z|0)*W],z|0)]!=8)return[x,z]}
+ return[W/2,D/2];
+}
+function spawnEnemy(big){const[x,z]=rpos(24);EN.push({x,y:TOP[(x|0)+(z|0)*W]+2,z,ph:Math.random()*6,big,hp:big?DIF[dif].big:(mode=='hunt'?2:1)+DIF[dif].hp,hit:0})}
+function newWorld(s){
+ EN=[];CR=[];
+ s=s??Math.floor(Math.random()*1e6);
+ gen(s);
+ pl.x=W/2;pl.z=D/2;pl.y=TOP[(W/2|0)+(D/2|0)*W]+2;pl.vy=0;pl.hp=100;
+ blocks=20;got=0;time=0;spawnT=0;kills=0;
+ if(mode=='crystal')for(let i=0;i<10;i++){const[x,z]=rpos(10);CR.push({x,y:TOP[(x|0)+(z|0)*W]+1.8,z})}
+ if(mode=='crystal')for(let i=0,n=Math.round(5*DIF[dif].cnt);i<n;i++)spawnEnemy();else{for(let i=0,n=Math.round(8*DIF[dif].cnt);i<n;i++)spawnEnemy();for(let i=0,n=Math.round(2*DIF[dif].cnt);i<n;i++)spawnEnemy(1)}
+}
+
+// ===== プレイヤー =====
+const pl={x:0,y:0,z:0,vy:0,hp:100,g:0};
+let yaw=0,pitch=0,sel=0,blocks=20,got=0,time=0,spawnT=0,state='menu',kills=0,jump=0,atk=0,mode='crystal';
+const hit=(px,py,pz)=>{const r=.3;
+ for(let x=Math.floor(px-r);x<=Math.floor(px+r);x++)for(let y=Math.floor(py);y<=Math.floor(py+1.7);y++)for(let z=Math.floor(pz-r);z<=Math.floor(pz+r);z++)if(solid(x,y,z))return 1;return 0};
+
+// ブロックを狙う(ボクセルDDA)
+function pick(){
+ const e=[pl.x,pl.y+1.6,pl.z],d=fwd(),dx=d[0]||1e-9,dy=d[1]||1e-9,dz=d[2]||1e-9;
+ let x=Math.floor(e[0]),y=Math.floor(e[1]),z=Math.floor(e[2]),px=x,py=y,pz=z;
+ const sx=Math.sign(dx),sy=Math.sign(dy),sz=Math.sign(dz),ax=Math.abs(1/dx),ay=Math.abs(1/dy),az=Math.abs(1/dz);
+ let tx=(sx>0?x+1-e[0]:e[0]-x)*ax,ty=(sy>0?y+1-e[1]:e[1]-y)*ay,tz=(sz>0?z+1-e[2]:e[2]-z)*az;
+ for(let i=0;i<20;i++){
+  if(solid(x,y,z))return{x,y,z,px,py,pz};
+  px=x;py=y;pz=z;
+  if(tx<ty&&tx<tz){if(tx>7)break;x+=sx;tx+=ax}else if(ty<tz){if(ty>7)break;y+=sy;ty+=ay}else{if(tz>7)break;z+=sz;tz+=az}
+ }
+ return null;
+}
+function aimEnemy(){
+ const f=fwd();let b=null,bd=7;
+ for(const e of EN){const tx=e.x-pl.x,ty=e.y-pl.y-1.6,tz=e.z-pl.z,d=Math.hypot(tx,ty,tz);
+  if(d<bd&&(tx*f[0]+ty*f[1]+tz*f[2])/d>.93){bd=d;b=e}}
+ return b;
+}
+function act(b){
+ if(state!='play')return;
+ if(b==0){
+  const en=aimEnemy();
+  if(en){if(atk>0)return;atk=.3;en.hp--;en.hit=.15;
+   const dx=en.x-pl.x,dz=en.z-pl.z,d=Math.hypot(dx,dz)||1;en.x=Math.max(1,Math.min(W-2,en.x+dx/d*.8));en.z=Math.max(1,Math.min(D-2,en.z+dz/d*.8));
+   if(en.hp<=0){EN.splice(EN.indexOf(en),1);kills+=en.big?2:1;blocks=Math.min(99,blocks+(en.big?5:2))}
+   return}
+  const p=pick();
+  if(p&&inb(p.x,p.y,p.z)&&p.y>0&&V[I(p.x,p.y,p.z)]){V[I(p.x,p.y,p.z)]=0;blocks=Math.min(99,blocks+1);colTop(p.x,p.z);build()}
+ }else{
+  const p=pick();
+  if(p&&blocks>0&&inb(p.px,p.py,p.pz)&&!V[I(p.px,p.py,p.pz)]){
+   V[I(p.px,p.py,p.pz)]=HOT[sel];
+   if(hit(pl.x,pl.y,pl.z))V[I(p.px,p.py,p.pz)]=0;
+   else{blocks--;colTop(p.px,p.pz);build()}
+  }
+ }
+}
+
+// ===== タッチ操作 =====
+const T={},tz=$('tz');
+tz.addEventListener('touchstart',e=>{e.preventDefault();for(const t of e.changedTouches)T[t.identifier]={s:t.clientX<innerWidth/2?0:1,x0:t.clientX,y0:t.clientY,x:t.clientX,y:t.clientY}},{passive:false});
+tz.addEventListener('touchmove',e=>{e.preventDefault();
+ for(const t of e.changedTouches){const o=T[t.identifier];if(!o)continue;
+  if(o.s==1&&state=='play'){yaw-=(t.clientX-o.x)*.006;pitch=Math.max(-1.5,Math.min(1.5,pitch-(t.clientY-o.y)*.006))}
+  o.x=t.clientX;o.y=t.clientY}},{passive:false});
+const tEnd=e=>{for(const t of e.changedTouches)delete T[t.identifier]};
+tz.addEventListener('touchend',tEnd);tz.addEventListener('touchcancel',tEnd);
+function bt(id,dn,up){const e=$(id);
+ e.addEventListener('touchstart',ev=>{ev.preventDefault();ev.stopPropagation();dn()},{passive:false});
+ e.addEventListener('touchend',ev=>{ev.preventDefault();up&&up()},{passive:false});
+ e.addEventListener('touchcancel',()=>up&&up());}
+bt('bj',()=>jump=1,()=>jump=0);
+bt('bb',()=>act(0));
+bt('bp',()=>act(2));
+bt('bs',()=>sel=(sel+1)%5);
+bt('bx',()=>{state='menu';showOv('一時停止',HELP,[['再開',start],['新しいワールド',()=>play(mode),1],['モード選択',menu,1]])});
+
+// ===== 画面・状態 =====
+const HELP='左半分ドラッグ: 移動(強く倒すとダッシュ)<br>右半分ドラッグ: 視点<br>壊す: ブロックを壊す・敵を攻撃 / 置く: ブロックを置く<br>水晶集め: 水晶を10個集める<br>討伐: 敵を10体倒す(ハードは20体)。大きい敵は2体分<br>敵に隣まで来られると攻撃されます。';
+function showOv(t,s,bs){$('ot').textContent=t;$('os').innerHTML=s;const c=$('bc');c.innerHTML='';
+ for(const[l,f,sub]of bs){const b=document.createElement('button');b.textContent=l;if(sub)b.className='sub';b.onclick=f;c.appendChild(b)}
+ $('ov').style.display='flex';$('tb').style.display='none';for(const k in T)delete T[k]}
+function start(){state='play';$('ov').style.display='none';$('tb').style.display='block'}
+let urlSeed;
+const DN=['イージー','ノーマル','ハード'],
+ DIF=[{spd:1,dmg:1,cnt:1,hp:0,big:5,reg:1,spw:1},{spd:1.3,dmg:1.5,cnt:1.4,hp:0,big:6,reg:.7,spw:.75},{spd:1.6,dmg:2.2,cnt:1.5,hp:1,big:6,reg:.4,spw:.5}];
+let dif=0;
+const play=m=>{mode=m;newWorld(urlSeed);urlSeed=void 0;start()};
+function menu(){state='menu';showOv('VOXEL DRIFT',HELP,[['水晶集めモード',()=>play('crystal')],['討伐モード',()=>play('hunt')]]);
+ const row=document.createElement('div');row.id='dr';row.append('難易度');
+ DN.forEach((n,i)=>{const b=document.createElement('button');b.textContent=n;if(i==dif)b.className='on';b.onclick=()=>{dif=i;menu()};row.appendChild(b)});
+ $('bc').insertBefore(row,$('bc').firstChild)}
+function end(s,t,m){state=s;showOv(t,m,[['もう一度',()=>play(mode)],['モード選択',menu,1]])}
+
+function update(dt){
+ time+=dt;atk=Math.max(0,atk-dt);
+ let s=0,f=0,tf=0;
+ for(const id in T){const o=T[id];if(o.s==0){s+=Math.max(-1,Math.min(1,(o.x-o.x0)/40));tf=Math.max(-1,Math.min(1,(o.y0-o.y)/40));f+=tf}}
+ const sp=tf>.95?8:5,sy=Math.sin(yaw),cy=Math.cos(yaw);
+ let vx=-sy*f+cy*s,vz=-cy*f-sy*s;const l=Math.hypot(vx,vz);if(l>1){vx/=l;vz/=l}
+ vx*=sp*dt;vz*=sp*dt;
+ if(!hit(pl.x+vx,pl.y,pl.z))pl.x+=vx;
+ if(!hit(pl.x,pl.y,pl.z+vz))pl.z+=vz;
+ pl.vy-=26*dt;const ny=pl.y+pl.vy*dt;
+ if(!hit(pl.x,ny,pl.z)){pl.y=ny;pl.g=0}else{if(pl.vy<0)pl.g=1;pl.vy=0}
+ if(jump&&pl.g){pl.vy=9;pl.g=0}
+ if(pl.y<-10)pl.y=H;
+ for(let i=CR.length-1;i>=0;i--){const c=CR[i];
+  if(Math.hypot(c.x-pl.x,c.y-pl.y-1,c.z-pl.z)<1.6){CR.splice(i,1);got++;pl.hp=Math.min(100,pl.hp+15)}}
+ if(mode=='crystal'?!CR.length:kills>=(dif==2?20:10))return end('win','クリア!',`タイム ${time.toFixed(1)} 秒 / 撃破 ${kills}`);
+ let ne=null,nd=5;const hu=mode=='hunt';
+ for(const e of EN){const dx=pl.x-e.x,dz=pl.z-e.z,d=Math.hypot(dx,dz),st=e.big?2.2:1.3,ar=e.big?2.9:1.8;
+  e.hit-=dt;
+  if(d<(hu?24:16)+dif*6&&d>st){const v=(e.big?1.1:hu?2:1.5)*DIF[dif].spd*dt;e.x+=dx/d*v;e.z+=dz/d*v} // 隣で止まる
+  const ty=TOP[(e.x|0)+(e.z|0)*W]+1.6+(e.big?.5:0)+Math.sin(time*2+e.ph)*.3;
+  e.y+=(ty-e.y)*Math.min(1,5*dt);
+  if(d<ar&&Math.abs(e.y-pl.y-.9)<(e.big?2:1.5)){e.cd=(e.cd??.8)-dt;if(e.cd<=0){pl.hp-=(e.big?22:hu?13:10)*DIF[dif].dmg;e.cd=(e.big?1.4:1)/(1+.2*dif)}}
+  else e.cd=Math.max(e.cd??.8,.5);
+  const dd=d-(e.big?1:0);if(dd<nd){nd=dd;ne=e}}
+ let drag=0;for(const id in T)if(T[id].s==1)drag=1;
+ if(ne&&!drag){ // 近い敵に照準が自動で向く(右側を触っている間は自分で操作)
+  const dx=ne.x-pl.x,dz=ne.z-pl.z,dy=ne.y-pl.y-1.6,k=Math.min(1,7*dt);
+  let a=Math.atan2(-dx,-dz)-yaw;a=Math.atan2(Math.sin(a),Math.cos(a));yaw+=a*k;
+  pitch+=(Math.atan2(dy,Math.hypot(dx,dz))-pitch)*k}
+ spawnT+=dt;if(spawnT>(hu?8:30)*DIF[dif].spw){spawnT=0;if(EN.length<Math.round((hu?12:10)*DIF[dif].cnt))spawnEnemy(hu&&Math.random()<.3&&EN.filter(e=>e.big).length<3+dif)}
+ pl.hp=Math.min(100,pl.hp+(hu?1:3)*DIF[dif].reg*dt);
+ if(pl.hp<=0)end('dead','やられた…',(mode=='crystal'?`水晶 ${got}/10`:`討伐 ${kills}/${dif==2?20:10}`)+` / ${time.toFixed(0)} 秒`);
+}
+const AR=['↑','↗','→','↘','↓','↙','←','↖'];
+function hud(){
+ const L=mode=='crystal'?CR:EN;let n='';
+ if(L.length){let b=L[0],bd=1e9;for(const c of L){const d=Math.hypot(c.x-pl.x,c.z-pl.z);if(d<bd){bd=d;b=c}}
+  const dx=b.x-pl.x,dz=b.z-pl.z,a=Math.atan2(Math.cos(yaw)*dx-Math.sin(yaw)*dz,-Math.sin(yaw)*dx-Math.cos(yaw)*dz);
+  n=`${mode=='crystal'?'水晶':'敵'} ${AR[(Math.round(a/(Math.PI/4))+8)%8]} ${Math.round(bd)}m`}
+ $('t').textContent=(mode=='crystal'?`水晶 ${got}/10  ブロック ${blocks}  撃破 ${kills}`:`討伐 ${kills}/${dif==2?20:10}  ブロック ${blocks}`)+`\n${n}  ${DN[dif]}  seed ${seed}`;
+ $('hpb').style.width=Math.max(0,pl.hp)+'%';$('bs').textContent='置く: '+HN[sel];
+}
+let last=performance.now(),hudT=0,vp;
+function loop(now){
+ requestAnimationFrame(loop);
+ const dt=Math.min(.05,(now-last)/1000);last=now;
+ if(state=='play')update(dt);
+ if((hudT+=dt)>.15){hudT=0;hud()}
+ gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+ gl.uniformMatrix4fv(uM,false,viewProj());
+ draw(wBuf,wN,[0,0,0],1,0,[1,1,1]);
+ CR.forEach((c,i)=>draw(cBuf,36,[c.x,c.y+Math.sin(time*3+i)*.15,c.z],.45,time*2,[1,.85,.3]));
+ EN.forEach(e=>draw(cBuf,36,[e.x,e.y,e.z],e.big?1.9:.9,time*2,e.hit>0?[1,1,1]:e.big?[.75,.35,1]:[1,.3,.35]));
+}
+const q=new URLSearchParams(location.search).get('seed');
+urlSeed=q?+q:void 0;newWorld(urlSeed);menu();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
