@@ -219,7 +219,7 @@ function newWorld(s){
  EN=[];CR=[];
  s=s??Math.floor(Math.random()*1e6);
  gen(s);
- pl.x=W/2;pl.z=mode=='raid'?D/2+16:mode=='endless'?D/2+9:D/2;pl.y=TOP[(pl.x|0)+(pl.z|0)*W]+2;pl.vy=0;pl.mhp=JOBS[job].hp;pl.hp=pl.mhp;AL=[];PR=[];FX=[];DC=null;cdk=0;ncr=dif==2?15:10;pgA=2;pgH=0;cap=3;rage=0;cdh=0;chg=0;hold=0;sumT=0;healerLost=false;wave=0;waveT=0;HI=null;lastK=null;BOSS=null;toastT=0;MT=[];EP=[];FT=null;sg=0;bf=0;hot=0;skT=0;rsk=Math.floor(Math.random()*4);ts.style.display='none';stock=job==3?3:0;sumN=0;kia=0;tau=0;hotR=10; /* サモナーは最初のストック3 */
+ pl.x=W/2;pl.z=mode=='raid'?D/2+16:mode=='endless'?D/2+9:D/2;pl.y=TOP[(pl.x|0)+(pl.z|0)*W]+2;pl.vy=0;pl.mhp=JOBS[job].hp;pl.hp=pl.mhp;AL=[];PR=[];FX=[];DC=null;cdk=0;ncr=dif==2?15:10;pgA=2;pgH=0;cap=3;rage=0;cdh=0;chg=0;hold=0;sumT=0;healerLost=false;wave=0;waveT=0;HI=null;lastK=null;BOSS=null;toastT=0;MT=[];EP=[];FT=null;zg=0;hov=0;sg=0;bf=0;hot=0;skT=0;rsk=Math.floor(Math.random()*4);ts.style.display='none';stock=job==3?3:0;sumN=0;kia=0;tau=0;hotR=10; /* サモナーは最初のストック3 */
  blocks=20;got=0;time=0;spawnT=0;kills=0;
  if(mode=='crystal')for(let i=0;i<ncr;i++){const[x,z]=rpos(10);CR.push({x,y:TOP[(x|0)+(z|0)*W]+1.8,z})}
  if(mode=='crystal'){for(let i=0,n=Math.round(5*DIF[dif].cnt);i<n;i++)spawnEnemy();addKinds(1+dif,1+(dif>>1))}else if(mode=='hunt'){for(let i=0,n=Math.round(8*DIF[dif].cnt);i<n;i++)spawnEnemy();for(let i=0,n=Math.round(2*DIF[dif].cnt);i<n;i++)spawnEnemy(1);addKinds(2+dif,1+dif)}else if(mode=='endless'){mkFort();pl.x=FT.x;pl.z=Math.min(D-3,FT.z+4);pl.y=Math.max(TOP[(pl.x|0)+(pl.z|0)*W],TOP[(pl.x-1|0)+(pl.z|0)*W],TOP[(pl.x|0)+(pl.z-1|0)*W],TOP[(pl.x-1|0)+(pl.z-1|0)*W])+2;startWave()}else raidInit();
@@ -268,11 +268,12 @@ function act(b){
 // ===== ジョブ =====
 const cg=$('cg'),cgb=cg.firstChild,ts=$('ts'),bbar=$('bbar'),bfill=bbar.firstChild.firstChild,btxt=bbar.lastChild;
 const JOBS=[
- {n:'剣士',hp:100,atk:10,reach:3.6,cd:.4,spd:1,btn:'攻撃',d:'バランス型 HP100・攻撃10。必殺技と\nランダムスキル(バフ/魔法/ノックバック/ヒール)'},
- {n:'拳闘士',hp:90,atk:2,reach:3,cd:.18,spd:1.25,btn:'連打',d:'高速近接 HP90・攻撃2。殴るほど成長(20発で+1)\n身代わり人形(HP150)で敵を挑発'},
- {n:'アーチャー',hp:70,atk:5,reach:0,cd:.25,spd:1,btn:'長押し\n溜め撃ち',d:'遠距離 HP70・長押しで溜め撃ち(5〜25)\nビーム技:貫通10ダメ+ノックバック&スロー'},
- {n:'サモナー',hp:80,atk:5,reach:0,cd:.5,spd:1,btn:'魔法',d:'HP80・攻撃5の遠距離魔法。倒した敵がストック→\n召喚で一気に呼び出し、合成で2匹→強化1匹'},
- {n:'ガーディアン',hp:300,atk:5,reach:3.6,cd:1,spd:.8,btn:'攻撃',d:'HP300のタンク・攻撃5(遅め)・移動やや遅い\nきあいだめ/挑発/怒りの衝撃波(+3秒で30回復)'}];
+ {n:'モノ･ブレード',hp:100,atk:10,reach:3.6,cd:.4,spd:1,btn:'攻撃',d:'バランス型 HP100・攻撃10。必殺技と\nランダムスキル(バフ/魔法/ノックバック/ヒール)'},
+ {n:'ナノ･ブースター',hp:90,atk:2,reach:3,cd:.18,spd:1.25,btn:'連打',d:'高速近接 HP90・攻撃2。殴るほど成長(20発で+1)\n身代わり人形(HP150)で敵を挑発'},
+ {n:'レールガンナー',hp:70,atk:5,reach:0,cd:.25,spd:1,btn:'長押し\n溜め撃ち',d:'遠距離 HP70・長押しで溜め撃ち(5〜25)\nビーム技:貫通10ダメ+ノックバック&スロー'},
+ {n:'ネクロ･ハッカー',hp:80,atk:5,reach:0,cd:.5,spd:1,btn:'魔法',d:'HP80・攻撃5の遠距離魔法。倒した敵がストック→\n召喚で一気に呼び出し、合成で2匹→強化1匹'},
+ {n:'ヘビープロテクター',hp:300,atk:5,reach:3.6,cd:1,spd:.8,btn:'攻撃',d:'HP300のタンク・攻撃5(遅め)・移動やや遅い\nきあいだめ/挑発/怒りの衝撃波(+3秒で30回復)'},
+ {n:'サイバー･スカイ',hp:90,atk:10,reach:0,cd:.5,spd:1,btn:'プラズマ',d:'HP90・プラズマ弾10ダメージ(連射不可)\nゼロG(上昇→ホバリング)とダイブ(衝撃波25)'}];
 const AC=[[.15,.6,1],[.85,.3,1],[.3,1,.6]],AH=[30,20,20];
 const rad=e=>e.boss?3.5:e.big?1:0,clmp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const pAtk=()=>job==1?pgA:JOBS[job].atk,pgNeed=()=>pgA>=30?55:pgA>=20?25:20; // 拳闘士: 殴った回数で成長(15発→攻撃20以降は20発→30以降は50発で+1・上限なし)
@@ -301,8 +302,20 @@ function dmgEnemy(e,d,sx=pl.x,sz=pl.z){
 }
 function bolt(){ // サモナーの通常攻撃: 遠距離の魔法
  const f=fwd();atk=JOBS[3].cd;if(mergeAB&&!aimEnemy(14))act(0);PR.push({x:pl.x+f[0]*.7,y:pl.y+1.45+f[1]*.7,z:pl.z+f[2]*.7,vx:f[0]*22,vy:f[1]*22,vz:f[2]*22,dmg:5,life:.85,g:0,s:.18,c:[.7,.5,1]})}
-function melee(){ // 剣士・拳闘士・サモナー・ガーディアンの近接攻撃
- if(atk>0)return;if(job==3){bolt();return}const J=JOBS[job],f=fwd();let b=null,bd=99;
+let zg=0,zy0=0,hov=0; // サイバー･スカイ: 0=通常 1=上昇 2=ゆっくり落下/ホバリング 3=ダイブ
+function plasma(){ // 通常攻撃: プラズマ弾(連射不可・10ダメージ)
+ if(atk>0||state!='play')return;const f=fwd();atk=.5;if(mergeAB&&!aimEnemy(14))act(0);
+ PR.push({x:pl.x+f[0]*.6,y:pl.y+1.5+f[1]*.6,z:pl.z+f[2]*.6,vx:f[0]*26,vy:f[1]*26,vz:f[2]*26,dmg:10,life:.9,g:0,s:.3,c:[.4,1,.5]})}
+function zeroG(){ // スキル1: 約13マス急上昇→ゆっくり落下(ジャンプ長押しで合計3秒までホバリング)。クール18秒
+ if(state!='play'||job!=5||cdk>0||zg)return;cdk=18;zg=1;zy0=pl.y;pl.g=0;hov=3}
+function dive(){ // スキル2: 急降下して着地点に衝撃波(25ダメージ+ノックバック)。クール18秒・空中でのみ
+ if(state!='play'||job!=5||cdh>0||pl.g)return;cdh=18;zg=3}
+function diveImpact(){
+ FX.push({k:'boom',x:pl.x,z:pl.z,y:pl.y+.3,r:7,t:0,l:.4,c:[.4,1,.5]});hitFX(pl.x,pl.y+.3,pl.z,[.4,1,.5],16,1.5);
+ for(const e of[...EN]){const dx=e.x-pl.x,dz=e.z-pl.z,l=Math.hypot(dx,dz)||1;
+  if(l-rad(e)<7&&Math.abs(e.y-pl.y)<5){dmgEnemy(e,25);if(!e.dead&&!e.boss){e.x=clmp(e.x+dx/l*5,1,W-2);e.z=clmp(e.z+dz/l*5,1,D-2)}}}}
+function melee(){ // 近接ジョブの攻撃
+ if(atk>0||job==5)return;if(job==3){bolt();return}const J=JOBS[job],f=fwd();let b=null,bd=99;
  for(const e of EN){const tx=e.x-pl.x,ty=e.y-pl.y-1.6,tz=e.z-pl.z,d=Math.hypot(tx,ty,tz);
   if(d-rad(e)<=J.reach&&(tx*f[0]+ty*f[1]+tz*f[2])/d>.8&&d<bd){bd=d;b=e}}
  atk=J.cd;FX.push({k:'swing',x:pl.x,y:pl.y+1.2,z:pl.z,dx:f[0]/(Math.hypot(f[0],f[2])||1),dz:f[2]/(Math.hypot(f[0],f[2])||1),t:0,l:.16,c:job==1?[1,.6,.2]:job==4?[.7,.7,1]:[.5,1,1]});if(!b&&mergeAB)act(0);if(b){dmgEnemy(b,pAtk()*(bf>0?2:1));if(job==0)sg=Math.min(100,sg+10);if(job==1){pgH++;if(pgH>=pgNeed()){pgH=0;pgA++}}}
@@ -580,8 +593,8 @@ bt('bb',()=>act(0));
 bt('bp',()=>act(2));
 bt('bs',()=>sel=(sel+1)%5);
 bt('bx',()=>pauseMenu());
-bt('bA',()=>{hold=1;chg=0},()=>{if(hold&&job==2)fire();hold=0;chg=0});
-bt('bk',()=>{job==4?(rage>=100?shock():kiai()):job==1?decoy():job==2?beam():job==0?special():job==3&&summonAll()});bt('bh',()=>job==0?randSkill():job==3?fuse():job==4&&taunt());
+bt('bA',()=>{hold=1;chg=0;if(job==5)plasma()},()=>{if(hold&&job==2)fire();hold=0;chg=0});
+bt('bk',()=>{job==4?(rage>=100?shock():kiai()):job==1?decoy():job==2?beam():job==0?special():job==3?summonAll():job==5&&zeroG()});bt('bh',()=>job==0?randSkill():job==3?fuse():job==4?taunt():job==5&&dive());
 
 // ===== 画面・状態 =====
 const HELP='左ドラッグ: 移動 / 右ドラッグ: 視点<br>攻撃ボタンで戦おう(ブロックは左下で壊す・置く)';
@@ -616,14 +629,17 @@ function update(dt){
  vx*=sp*dt;vz*=sp*dt;
  if(!hit(pl.x+vx,pl.y,pl.z))pl.x+=vx;
  if(!hit(pl.x,pl.y,pl.z+vz))pl.z+=vz;
- pl.vy-=26*dt;const ny=pl.y+pl.vy*dt;
- if(!hit(pl.x,ny,pl.z)){pl.y=ny;pl.g=0}else{if(pl.vy<0)pl.g=1;pl.vy=0}
+ pl.vy-=26*dt;
+ if(zg==1){pl.vy=22;if(pl.y-zy0>=12)zg=2}else if(zg==2){if(jump&&hov>0){pl.vy=0;hov-=dt}else pl.vy=-2.5}else if(zg==3)pl.vy=-35;
+ const ny=pl.y+pl.vy*dt;
+ if(!hit(pl.x,ny,pl.z)){pl.y=ny;pl.g=0}else{if(pl.vy<0)pl.g=1;if(zg==1&&pl.vy>0)zg=2;pl.vy=0}
+ if(pl.g&&zg==2)zg=0;if(pl.g&&zg==3){diveImpact();zg=0}
  if(jump&&pl.g){pl.vy=9;pl.g=0}
  if(pl.y<-10)pl.y=H;
  for(let i=CR.length-1;i>=0;i--){const c=CR[i];
   if(Math.hypot(c.x-pl.x,c.y-pl.y-1,c.z-pl.z)<1.6){CR.splice(i,1);got++;pl.hp=Math.min(pl.mhp,pl.hp+15)}}
  if(mode=='crystal'?!CR.length:mode=='hunt'?kills>=(dif==2?20:10):mode=='raid'&&BOSS&&BOSS.dead)return end('win',mode=='raid'?'レイドクリア!':'クリア!',`タイム ${time.toFixed(1)} 秒 / 撃破 ${kills}`);
- const hu=mode!='crystal';let ne=null,nd=job==2?9:5;
+ const hu=mode!='crystal';let ne=null,nd=job==2||job==5?9:5;
  for(const e of EN){
   if(e.boss){bossTick(e,dt);const dpb=Math.hypot(pl.x-e.x,pl.z-e.z)-rad(e);if(dpb<nd){nd=dpb;ne=e}continue}
   let tg=pl,ty0=pl.y+.9,td=Math.hypot(pl.x-e.x,pl.z-e.z),tn=0;
@@ -666,12 +682,13 @@ function hud(){
   const dx=b.x-pl.x,dz=b.z-pl.z,a=Math.atan2(Math.cos(yaw)*dx-Math.sin(yaw)*dz,-Math.sin(yaw)*dx-Math.cos(yaw)*dz);
   n=`${mode=='crystal'?'水晶':'敵'} ${AR[(Math.round(a/(Math.PI/4))+8)%8]} ${Math.round(bd)}m`}
  const J=JOBS[job],te=aimEnemy();
- let jl=`【${J.n}】HP ${Math.ceil(Math.max(0,pl.hp))}/${pl.mhp}  攻撃 ${pAtk()}`;if(job==3)jl+=`  仲間 ${AL.filter(a=>!a.cpu).length}/12  ストック ${stock}`;if(job==1)jl+=`  (強化まで${pgNeed()-pgH}発)`;if(job==4&&kia>0)jl+=`  きあい${kia.toFixed(1)}s`;if(job==4&&tau>0)jl+=`  挑発${Math.ceil(tau)}s`;if(hot>0&&job==4)jl+=`  回復中${Math.ceil(hot)}s`;if(job==0&&skT>0)jl+=`  【${RN[lastSk]}!】`;if(job==0&&bf>0)jl+=`  バフ${bf.toFixed(1)}s`;if(DC)jl+=`  身代わり ${Math.ceil(DC.hp)}/${DC.mhp}`;
+ let jl=`【${J.n}】HP ${Math.ceil(Math.max(0,pl.hp))}/${pl.mhp}  攻撃 ${pAtk()}`;if(job==3)jl+=`  仲間 ${AL.filter(a=>!a.cpu).length}/12  ストック ${stock}`;if(job==1)jl+=`  (強化まで${pgNeed()-pgH}発)`;if(job==4&&kia>0)jl+=`  きあい${kia.toFixed(1)}s`;if(job==4&&tau>0)jl+=`  挑発${Math.ceil(tau)}s`;if(hot>0&&job==4)jl+=`  回復中${Math.ceil(hot)}s`;if(job==0&&skT>0)jl+=`  【${RN[lastSk]}!】`;if(job==0&&bf>0)jl+=`  バフ${bf.toFixed(1)}s`;if(job==5&&zg==2)jl+=`  ホバー${hov.toFixed(1)}s`;if(DC)jl+=`  身代わり ${Math.ceil(DC.hp)}/${DC.mhp}`;
  $('t').textContent=(mode=='crystal'?`水晶 ${got}/${ncr}  ブロック ${blocks}  撃破 ${kills}`:mode=='endless'?`WAVE ${wave}  敵 ${EN.length}体  砦 ${FT?Math.ceil(Math.max(0,FT.hp)):0}`:mode=='raid'?`レイド  パーティ ${1+AL.filter(a=>a.t>=10).length}/8  ブロック ${blocks}`:`討伐 ${kills}/${dif==2?20:10}  ブロック ${blocks}`)+`\n${jl}\n${n}  ${mode=='endless'||mode=='raid'?'':DN[dif]}  seed ${seed}`+(te?`\n標的 HP ${Math.ceil(te.hp)}/${te.mhp}`:'');
  $('hpb').style.width=Math.max(0,pl.hp/pl.mhp*100)+'%';$('bs').textContent='置く: '+HN[sel];$('bA').textContent=J.btn;bossBar();
- const kb=$('bk'),hb=$('bh');kb.style.display=job<=4?'block':'none';hb.style.display=job==0||job==3||job==4?'block':'none';
+ const kb=$('bk'),hb=$('bh');kb.style.display=job<=5?'block':'none';hb.style.display=job==0||job==3||job==4||job==5?'block':'none';
  if(job==4){kb.textContent=rage>=100?'衝撃波!\n+回復':cdk>0?'きあい\n'+Math.ceil(cdk)+'s':'きあいだめ\n'+Math.floor(rage)+'%';kb.classList.toggle('rdy',rage>=100)}else if(job==3){kb.textContent='召喚\n×'+stock;kb.classList.toggle('rdy',stock>0)}else if(job==0){kb.textContent='必殺技\n'+Math.floor(sg)+'%';kb.classList.toggle('rdy',sg>=100)}else if(job==1||job==2){kb.textContent=(job==1?'身代わり':'ビーム')+(cdk>0?'\n'+Math.ceil(cdk)+'s':'');kb.classList.toggle('rdy',cdk<=0&&!DC)}
  if(job==0)hb.textContent=RN[rsk]+(cdh>0?'\n'+Math.ceil(cdh)+'s':'');else if(job==3){hb.textContent='合成\n(2消費)';hb.classList.toggle('rdy',stock>=2)}else if(job==4)hb.textContent=tau>0?'挑発中\n'+Math.ceil(tau)+'s':cdh>0?'挑発\n'+Math.ceil(cdh)+'s':'挑発';
+ if(job==5){kb.textContent='ゼロG'+(cdk>0?'\n'+Math.ceil(cdk)+'s':'');kb.classList.toggle('rdy',cdk<=0&&!zg);hb.textContent='ダイブ'+(cdh>0?'\n'+Math.ceil(cdh)+'s':'');hb.classList.toggle('rdy',cdh<=0&&!pl.g)}
 }
 let last=performance.now(),hudT=0,vp;
 // ===== ネオンの光のにじみ(加算合成) =====
