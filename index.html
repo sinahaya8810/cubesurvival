@@ -135,19 +135,19 @@ const I=(x,y,z)=>(y*D+z)*W+x;
 const inb=(x,y,z)=>x>=0&&x<W&&y>=0&&y<H&&z>=0&&z<D;
 const solid=(x,y,z)=>(y<0||x<0||x>=W||z<0||z>=D)?true:y>=H?false:V[I(x,y,z)]>0;
 const HOT=[3,4,6,7,5],HN=['石','砂','木','葉','雪'];
-let PAL=[],SKY=[.5,.7,.9],NG=[0,1,1];
+let PAL=[],SKY=[.5,.7,.9],NG=[0,1,1],GS=0,GSo=null; // GS: 世界の白黒度 / GSo: 個別の上書き(0=色つき)
 function colTop(x,z){let y=H-1;while(y>0&&!V[I(x,y,z)])y--;TOP[x+z*W]=y}
 
 // ===== WebGL(外部ライブラリなし) =====
 const cv=$('cv'),gl=cv.getContext('webgl',{antialias:true});
 if(!gl)throw new Error('WebGLが使えません');
 const VS='attribute vec3 p;attribute vec3 c;uniform mat4 m;uniform vec3 o;uniform vec3 s;uniform float r;varying vec3 v;varying float d;void main(){float a=cos(r),b=sin(r);vec3 q=vec3(p.x*a+p.z*b,p.y,-p.x*b+p.z*a)*s+o;vec4 w=m*vec4(q,1.);gl_Position=w;d=w.w;v=c;}';
-const FS='precision mediump float;uniform vec3 k,f;uniform float al;varying vec3 v;varying float d;void main(){gl_FragColor=vec4(mix(v*k,f,clamp((d-22.)/58.,0.,1.)),al);}';
+const FS='precision mediump float;uniform vec3 k,f;uniform float al,gs;varying vec3 v;varying float d;void main(){vec3 c=mix(v*k,f,clamp((d-22.)/58.,0.,1.));c=mix(c,vec3(dot(c,vec3(.3,.59,.11))),gs);gl_FragColor=vec4(c,al);}';
 const pg=gl.createProgram();
 for(const[t,s]of[[gl.VERTEX_SHADER,VS],[gl.FRAGMENT_SHADER,FS]]){const x=gl.createShader(t);gl.shaderSource(x,s);gl.compileShader(x);
  if(!gl.getShaderParameter(x,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(x));gl.attachShader(pg,x)}
 gl.bindAttribLocation(pg,0,'p');gl.bindAttribLocation(pg,1,'c');gl.linkProgram(pg);gl.useProgram(pg);
-const U=n=>gl.getUniformLocation(pg,n),uM=U('m'),uO=U('o'),uS=U('s'),uR=U('r'),uK=U('k'),uF=U('f'),uA=U('al');
+const U=n=>gl.getUniformLocation(pg,n),uM=U('m'),uO=U('o'),uS=U('s'),uR=U('r'),uK=U('k'),uF=U('f'),uA=U('al'),uG=U('gs');
 gl.enable(gl.DEPTH_TEST);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
 let asp=1;
 function rs(){const d=Math.min(devicePixelRatio||1,2);cv.width=innerWidth*d;cv.height=innerHeight*d;cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';gl.viewport(0,0,cv.width,cv.height);asp=innerWidth/innerHeight}
@@ -181,7 +181,7 @@ function build(){ // 見える面だけをまとめて1メッシュに
 function draw(buf,n,o,s,r,k,a){
  gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.enableVertexAttribArray(0);gl.enableVertexAttribArray(1);
  gl.vertexAttribPointer(0,3,gl.FLOAT,false,24,0);gl.vertexAttribPointer(1,3,gl.FLOAT,false,24,12);
- gl.uniform3fv(uO,o);typeof s=='number'?gl.uniform3f(uS,s,s,s):gl.uniform3fv(uS,s);gl.uniform1f(uR,r);gl.uniform3fv(uK,k);gl.uniform1f(uA,a===undefined?1:a);gl.drawArrays(gl.TRIANGLES,0,n);
+ gl.uniform3fv(uO,o);typeof s=='number'?gl.uniform3f(uS,s,s,s):gl.uniform3fv(uS,s);gl.uniform1f(uR,r);gl.uniform3fv(uK,k);gl.uniform1f(uA,a===undefined?1:a);gl.uniform1f(uG,GSo!==null?GSo:GS);gl.drawArrays(gl.TRIANGLES,0,n);
 }
 
 // ===== ワールド生成(シードごとに地形・色・水位・木の量が変わる) =====
@@ -219,7 +219,7 @@ function newWorld(s){
  EN=[];CR=[];
  s=s??Math.floor(Math.random()*1e6);
  gen(s);
- pl.x=W/2;pl.z=mode=='raid'?D/2+16:mode=='endless'?D/2+9:D/2;pl.y=TOP[(pl.x|0)+(pl.z|0)*W]+2;pl.vy=0;pl.mhp=JOBS[job].hp;pl.hp=pl.mhp;AL=[];PR=[];FX=[];DC=null;cdk=0;ncr=dif==2?15:10;pgA=2;pgH=0;cap=3;rage=0;cdh=0;chg=0;hold=0;sumT=0;healerLost=false;wave=0;waveT=0;HI=null;lastK=null;BOSS=null;toastT=0;MT=[];EP=[];FT=null;zg=0;hov=0;sg=0;bf=0;hot=0;skT=0;rsk=Math.floor(Math.random()*4);ts.style.display='none';stock=job==3?3:0;sumN=0;kia=0;tau=0;hotR=10; /* サモナーは最初のストック3 */
+ pl.x=W/2;pl.z=mode=='raid'?D/2+16:mode=='endless'?D/2+9:D/2;pl.y=TOP[(pl.x|0)+(pl.z|0)*W]+2;pl.vy=0;pl.mhp=JOBS[job].hp;pl.hp=pl.mhp;AL=[];PR=[];FX=[];DC=null;cdk=0;ncr=dif==2?15:10;pgA=2;pgH=0;cap=3;rage=0;cdh=0;chg=0;hold=0;sumT=0;healerLost=false;wave=0;waveT=0;HI=null;lastK=null;BOSS=null;toastT=0;MT=[];EP=[];FT=null;zg=0;hov=0;BM=[];mg=0;sg=0;bf=0;hot=0;skT=0;rsk=Math.floor(Math.random()*4);ts.style.display='none';stock=job==3?3:0;sumN=0;kia=0;tau=0;hotR=10; /* サモナーは最初のストック3 */
  blocks=20;got=0;time=0;spawnT=0;kills=0;
  if(mode=='crystal')for(let i=0;i<ncr;i++){const[x,z]=rpos(10);CR.push({x,y:TOP[(x|0)+(z|0)*W]+1.8,z})}
  if(mode=='crystal'){for(let i=0,n=Math.round(5*DIF[dif].cnt);i<n;i++)spawnEnemy();addKinds(1+dif,1+(dif>>1))}else if(mode=='hunt'){for(let i=0,n=Math.round(8*DIF[dif].cnt);i<n;i++)spawnEnemy();for(let i=0,n=Math.round(2*DIF[dif].cnt);i<n;i++)spawnEnemy(1);addKinds(2+dif,1+dif)}else if(mode=='endless'){mkFort();pl.x=FT.x;pl.z=Math.min(D-3,FT.z+4);pl.y=Math.max(TOP[(pl.x|0)+(pl.z|0)*W],TOP[(pl.x-1|0)+(pl.z|0)*W],TOP[(pl.x|0)+(pl.z-1|0)*W],TOP[(pl.x-1|0)+(pl.z-1|0)*W])+2;startWave()}else raidInit();
@@ -273,7 +273,8 @@ const JOBS=[
  {n:'レールガンナー',hp:70,atk:5,reach:0,cd:.25,spd:1,btn:'長押し\n溜め撃ち',d:'遠距離 HP70・長押しで溜め撃ち(5〜25)\nビーム技:貫通10ダメ+ノックバック&スロー'},
  {n:'ネクロ･ハッカー',hp:80,atk:5,reach:0,cd:.5,spd:1,btn:'魔法',d:'HP80・攻撃5の遠距離魔法。倒した敵がストック→\n召喚で一気に呼び出し、合成で2匹→強化1匹'},
  {n:'ヘビープロテクター',hp:300,atk:5,reach:3.6,cd:1,spd:.8,btn:'攻撃',d:'HP300のタンク・攻撃5(遅め)・移動やや遅い\nきあいだめ/挑発/怒りの衝撃波(+3秒で30回復)'},
- {n:'サイバー･スカイ',hp:90,atk:10,reach:0,cd:.5,spd:1,btn:'プラズマ',d:'HP90・プラズマ弾10ダメージ(連射不可)\nゼロG(上昇→ホバリング)とダイブ(衝撃波25)'}];
+ {n:'サイバー･スカイ',hp:90,atk:10,reach:0,cd:.5,spd:1,btn:'プラズマ',d:'HP90・プラズマ弾10ダメージ(連射不可)\nゼロG(上昇→ホバリング)とダイブ(衝撃波25)'},
+ {n:'ファントム･ジョーカー',hp:85,atk:6,reach:0,cd:.5,spd:1,btn:'カード',d:'HP85・カード1〜5枚を扇状に貫通(各6ダメ)\nメガボム(範囲40)・マジック(時間停止+マーク→テレポート)'}];
 const AC=[[.15,.6,1],[.85,.3,1],[.3,1,.6]],AH=[30,20,20];
 const rad=e=>e.boss?3.5:e.big?1:0,clmp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const pAtk=()=>job==1?pgA:JOBS[job].atk,pgNeed=()=>pgA>=30?55:pgA>=20?25:20; // 拳闘士: 殴った回数で成長(15発→攻撃20以降は20発→30以降は50発で+1・上限なし)
@@ -302,6 +303,46 @@ function dmgEnemy(e,d,sx=pl.x,sz=pl.z){
 }
 function bolt(){ // サモナーの通常攻撃: 遠距離の魔法
  const f=fwd();atk=JOBS[3].cd;if(mergeAB&&!aimEnemy(14))act(0);PR.push({x:pl.x+f[0]*.7,y:pl.y+1.45+f[1]*.7,z:pl.z+f[2]*.7,vx:f[0]*22,vy:f[1]*22,vz:f[2]*22,dmg:5,life:.85,g:0,s:.18,c:[.7,.5,1]})}
+const NZ=[[.2,1,1],[1,.2,.9],[1,1,1],[.4,1,.4]];
+let BM=[],mg=0; // メガボム / マジック残り秒
+function cards(){ // 通常攻撃: トランプを1〜5枚、扇状に飛ばす(貫通・各6ダメージ)
+ if(atk>0||state!='play'||mg>0)return;const f=fwd(),n=1+Math.floor(Math.random()*5);atk=.5;if(mergeAB&&!aimEnemy(14))act(0);
+ for(let i=0;i<n;i++){const a=(i-(n-1)/2)*.16,c=Math.cos(a),sn=Math.sin(a),dx=f[0]*c-f[2]*sn,dz=f[0]*sn+f[2]*c;
+  PR.push({x:pl.x+dx*.6,y:pl.y+1.5+f[1]*.6,z:pl.z+dz*.6,vx:dx*22,vy:f[1]*22,vz:dz*22,dmg:6,life:1,g:0,s:.25,c:Math.random()<.5?[1,.25,.45]:[.95,.95,1],pi:1,h:[],card:1,rot:Math.random()*6})}}
+function megaBomb(){ // スキル1: 大きなネオン爆弾を放物線で投げる(半径2マス・40ダメージ・クール20秒)
+ if(state!='play'||job!=6||cdk>0||mg>0)return;cdk=20;const f=fwd();
+ BM.push({x:pl.x+f[0]*.8,y:pl.y+1.5,z:pl.z+f[2]*.8,vx:f[0]*10,vy:f[1]*10+6,vz:f[2]*10,t:0})}
+function noiseBoom(x,y,z){const ps=[];for(let i=0;i<46;i++){const a=Math.random()*6.283,b=Math.acos(2*Math.random()-1),v=3+Math.random()*6;
+ ps.push([Math.sin(b)*Math.cos(a)*v,Math.cos(b)*v*.8+1,Math.sin(b)*Math.sin(a)*v,.06+Math.random()*.3,Math.floor(Math.random()*4),Math.random()])}
+ FX.push({k:'nz',x,y,z,t:0,l:.7,ps})}
+function bombTick(dt){
+ for(let i=BM.length-1;i>=0;i--){const b=BM[i];b.vy-=14*dt;b.x+=b.vx*dt;b.y+=b.vy*dt;b.z+=b.vz*dt;b.t+=dt;
+  let ex=b.t>5||b.y<0||solid(Math.floor(b.x),Math.floor(b.y-.5),Math.floor(b.z));
+  if(!ex)for(const e of EN)if(Math.hypot(b.x-e.x,b.y-e.y,b.z-e.z)<1+rad(e)+(e.big?.4:.3)){ex=true;break}
+  if(ex){BM.splice(i,1);
+   for(const e of[...EN])if(Math.hypot(e.x-b.x,e.z-b.z)<2+rad(e)&&Math.abs(e.y-b.y)<3)dmgEnemy(e,40,b.x,b.z);
+   FX.push({k:'boom',x:b.x,z:b.z,y:b.y,r:2,t:0,l:.35,c:[1,.3,1]});noiseBoom(b.x,b.y,b.z)}}}
+function magic(){ // スキル2: 9秒間 周囲の敵を完全停止・世界は白黒・敵をマーク→終了時に前方へまとめてテレポート(クール20秒、発動中はクールが進まない)
+ if(state!='play'||job!=6||cdh>0||mg>0)return;cdh=20;mg=9;
+ for(const e of EN)if(Math.hypot(e.x-pl.x,e.z-pl.z)<25){e.fz=1;e.mk=0}
+ toast('マジック! 敵をタップしてマーク',2)}
+function markE(e){if(mg>0&&e&&e.fz){e.mk=e.mk?0:1;hitFX(e.x,e.y,e.z,[1,.9,.3],8,1)}}
+function markAim(){markE(aimEnemy(40))}
+function tapMark(px,py){ // 画面タップで一番近い敵をマーク
+ const m=viewProj(),fl=innerHeight/2/Math.tan(.65);let b=null,bd=1e9;
+ for(const e of EN){if(!e.fz)continue;const w=m[3]*e.x+m[7]*e.y+m[11]*e.z+m[15];if(w<=.1)continue;
+  const sx=((m[0]*e.x+m[4]*e.y+m[8]*e.z+m[12])/w*.5+.5)*innerWidth,sy=(1-((m[1]*e.x+m[5]*e.y+m[9]*e.z+m[13])/w*.5+.5))*innerHeight,
+   sz=e.boss?5.7:e.big?1.9:e.fly?.8:e.rng?1.1:.9,th=Math.max(55,sz*fl/w*.9),d=Math.hypot(sx-px,sy-py);
+  if(d<th&&d<bd){bd=d;b=e}}
+ markE(b)}
+function endMagic(){ // 効果終了: マークした敵を向いている方向(最大3マス先)へまとめて瞬間移動
+ const f=fwd(),hl=Math.hypot(f[0],f[2])||1,dx=f[0]/hl,dz=f[2]/hl;let d=3,i=0;
+ while(d>0&&solid(Math.floor(pl.x+dx*d),Math.floor(pl.y+1),Math.floor(pl.z+dz*d)))d-=.5;d=Math.max(d,0);
+ const px=pl.x+dx*d,pz=pl.z+dz*d;
+ for(const e of EN){if(e.fz&&e.mk){hitFX(e.x,e.y,e.z,[1,.9,.3],10,1);const an=i*2.4,r=.4+.35*Math.floor(i/4);i++;
+   e.x=clmp(px+Math.cos(an)*r,1,W-2);e.z=clmp(pz+Math.sin(an)*r,1,D-2);e.y=TOP[(e.x|0)+(e.z|0)*W]+(e.fly?7:1.6);hitFX(e.x,e.y,e.z,[.6,1,1],10,1)}
+  e.fz=0;e.mk=0}
+ if(i)toast('テレポート! '+i+'体',1.5)}
 let zg=0,zy0=0,hov=0; // サイバー･スカイ: 0=通常 1=上昇 2=ゆっくり落下/ホバリング 3=ダイブ
 function plasma(){ // 通常攻撃: プラズマ弾(連射不可・10ダメージ)
  if(atk>0||state!='play')return;const f=fwd();atk=.5;if(mergeAB&&!aimEnemy(14))act(0);
@@ -315,6 +356,7 @@ function diveImpact(){
  for(const e of[...EN]){const dx=e.x-pl.x,dz=e.z-pl.z,l=Math.hypot(dx,dz)||1;
   if(l-rad(e)<7&&Math.abs(e.y-pl.y)<5){dmgEnemy(e,25);if(!e.dead&&!e.boss){e.x=clmp(e.x+dx/l*5,1,W-2);e.z=clmp(e.z+dz/l*5,1,D-2)}}}}
 function melee(){ // 近接ジョブの攻撃
+ if(job==6){if(mg<=0)cards();return}
  if(atk>0||job==5)return;if(job==3){bolt();return}const J=JOBS[job],f=fwd();let b=null,bd=99;
  for(const e of EN){const tx=e.x-pl.x,ty=e.y-pl.y-1.6,tz=e.z-pl.z,d=Math.hypot(tx,ty,tz);
   if(d-rad(e)<=J.reach&&(tx*f[0]+ty*f[1]+tz*f[2])/d>.8&&d<bd){bd=d;b=e}}
@@ -401,7 +443,7 @@ function allyTick(dt){
  }
 }
 function jobTick(dt){
- if(cdh>0)cdh-=dt;if(cdk>0)cdk-=dt;if(bf>0)bf-=dt;if(skT>0)skT-=dt;if(hot>0){hot-=dt;pl.hp=Math.min(pl.mhp,pl.hp+hotR*dt)}if(kia>0)kia-=dt;if(tau>0)tau-=dt;
+ if(!(job==6&&mg>0)){if(cdh>0)cdh-=dt;if(cdk>0)cdk-=dt}bombTick(dt);if(mg>0){mg-=dt;if(mg<=0)endMagic()}if(bf>0)bf-=dt;if(skT>0)skT-=dt;if(hot>0){hot-=dt;pl.hp=Math.min(pl.mhp,pl.hp+hotR*dt)}if(kia>0)kia-=dt;if(tau>0)tau-=dt;
  if(hold&&job!=2)melee();
  if(hold&&job==2){chg=Math.min(1.2,chg+dt);cg.style.display='block';cgb.style.width=chg/1.2*100+'%'}else cg.style.display='none';
   if(AL.length)allyTick(dt);
@@ -530,7 +572,7 @@ function cpuTick(a,ai,ne,nd,dt){ // レイドのCPU(プレイヤー並みの強�
 }
 function modeTick(dt){
  if(toastT>0){toastT-=dt;if(toastT<=0)ts.style.display='none'}
- epTick(dt);mtTick(dt);fortTick(dt);
+ if(mg<=0){epTick(dt);mtTick(dt)}fortTick(dt);
  if(mode=='endless'){
   if(!EN.length&&!waveT){waveT=3;const lx=lastK?lastK.x:pl.x,lz=lastK?lastK.z:pl.z;HI={x:lx,z:lz,y:TOP[(lx|0)+(lz|0)*W]+1.6};toast('WAVE '+wave+' クリア! 回復アイテム',2.5)}
   else if(waveT>0){waveT-=dt;if(waveT<=0){waveT=0;startWave()}}
@@ -550,13 +592,13 @@ let aimOn=true;try{aimOn=localStorage.getItem('vd_aim')!='0'}catch(e){}
 function setAim(v){aimOn=v;try{localStorage.setItem('vd_aim',v?'1':'0')}catch(e){}}
 function jsUpd(o){let dx=o.x-o.x0,dy=o.y-o.y0;const d=Math.hypot(dx,dy);if(d>40){dx*=40/d;dy*=40/d}jk.style.transform=`translate(${dx}px,${dy}px)`}
 tz.addEventListener('touchstart',e=>{e.preventDefault();for(const t of e.changedTouches){
- const o=T[t.identifier]={s:t.clientX<innerWidth/2?0:1,x0:t.clientX,y0:t.clientY,x:t.clientX,y:t.clientY};
+ const o=T[t.identifier]={s:t.clientX<innerWidth/2?0:1,x0:t.clientX,y0:t.clientY,x:t.clientX,y:t.clientY,t0:performance.now()};
  if(o.s==0&&stick&&state=='play'&&jsId==null){jsId=t.identifier;js.style.left=o.x0+'px';js.style.top=o.y0+'px';jk.style.transform='';js.style.display='block'}}},{passive:false});
 tz.addEventListener('touchmove',e=>{e.preventDefault();
  for(const t of e.changedTouches){const o=T[t.identifier];if(!o)continue;
   if(o.s==1&&state=='play'){yaw-=(t.clientX-o.x)*.006;pitch=Math.max(-1.5,Math.min(1.5,pitch-(t.clientY-o.y)*.006))}
   o.x=t.clientX;o.y=t.clientY;if(t.identifier===jsId)jsUpd(o)}},{passive:false});
-const tEnd=e=>{for(const t of e.changedTouches){delete T[t.identifier];if(t.identifier===jsId){jsId=null;js.style.display='none'}}};
+const tEnd=e=>{for(const t of e.changedTouches){const o=T[t.identifier];if(o&&mg>0&&job==6&&state=='play'&&Math.hypot(o.x-o.x0,o.y-o.y0)<12&&performance.now()-o.t0<300)tapMark(o.x,o.y);delete T[t.identifier];if(t.identifier===jsId){jsId=null;js.style.display='none'}}};
 tz.addEventListener('touchend',tEnd);tz.addEventListener('touchcancel',tEnd);
 const BN={bj:'ジャンプ',bA:'攻撃',bb:'壊す',bp:'置く',bk:'スキル1',bh:'スキル2',bs:'ブロック切替',bx:'メニュー'};
 let UI={},mergeAB=false;try{UI=JSON.parse(localStorage.getItem('vd_ui')||'{}')}catch(e){}
@@ -593,8 +635,8 @@ bt('bb',()=>act(0));
 bt('bp',()=>act(2));
 bt('bs',()=>sel=(sel+1)%5);
 bt('bx',()=>pauseMenu());
-bt('bA',()=>{hold=1;chg=0;if(job==5)plasma()},()=>{if(hold&&job==2)fire();hold=0;chg=0});
-bt('bk',()=>{job==4?(rage>=100?shock():kiai()):job==1?decoy():job==2?beam():job==0?special():job==3?summonAll():job==5&&zeroG()});bt('bh',()=>job==0?randSkill():job==3?fuse():job==4?taunt():job==5&&dive());
+bt('bA',()=>{hold=1;chg=0;if(job==5)plasma();if(job==6&&mg>0)markAim()},()=>{if(hold&&job==2)fire();hold=0;chg=0});
+bt('bk',()=>{job==4?(rage>=100?shock():kiai()):job==1?decoy():job==2?beam():job==0?special():job==3?summonAll():job==5?zeroG():job==6&&megaBomb()});bt('bh',()=>job==0?randSkill():job==3?fuse():job==4?taunt():job==5?dive():job==6&&magic());
 
 // ===== 画面・状態 =====
 const HELP='左ドラッグ: 移動 / 右ドラッグ: 視点<br>攻撃ボタンで戦おう(ブロックは左下で壊す・置く)';
@@ -639,8 +681,9 @@ function update(dt){
  for(let i=CR.length-1;i>=0;i--){const c=CR[i];
   if(Math.hypot(c.x-pl.x,c.y-pl.y-1,c.z-pl.z)<1.6){CR.splice(i,1);got++;pl.hp=Math.min(pl.mhp,pl.hp+15)}}
  if(mode=='crystal'?!CR.length:mode=='hunt'?kills>=(dif==2?20:10):mode=='raid'&&BOSS&&BOSS.dead)return end('win',mode=='raid'?'レイドクリア!':'クリア!',`タイム ${time.toFixed(1)} 秒 / 撃破 ${kills}`);
- const hu=mode!='crystal';let ne=null,nd=job==2||job==5?9:5;
+ const hu=mode!='crystal';let ne=null,nd=job==2||job==5||job==6?9:5;
  for(const e of EN){
+  if(e.fz)continue;
   if(e.boss){bossTick(e,dt);const dpb=Math.hypot(pl.x-e.x,pl.z-e.z)-rad(e);if(dpb<nd){nd=dpb;ne=e}continue}
   let tg=pl,ty0=pl.y+.9,td=Math.hypot(pl.x-e.x,pl.z-e.z),tn=0;
   for(const a of AL){const d2=Math.hypot(a.x-e.x,a.z-e.z);if(d2<td){td=d2;tg=a;ty0=a.y}} // 一番近い相手(プレイヤー/味方)を狙う
@@ -670,7 +713,7 @@ function update(dt){
   const dx=ne.x-pl.x,dz=ne.z-pl.z,dy=ne.y-pl.y-1.6,k=Math.min(1,7*dt);
   let a=Math.atan2(-dx,-dz)-yaw;a=Math.atan2(Math.sin(a),Math.cos(a));yaw+=a*k;
   pitch+=(Math.atan2(dy,Math.hypot(dx,dz))-pitch)*k}
- spawnT+=dt;if((mode=='crystal'||mode=='hunt')&&spawnT>(hu?8:30)*DIF[dif].spw){spawnT=0;if(EN.length<Math.round((hu?12:10)*DIF[dif].cnt))spawnMix()}
+ if(mg<=0)spawnT+=dt;if((mode=='crystal'||mode=='hunt')&&spawnT>(hu?8:30)*DIF[dif].spw){spawnT=0;if(EN.length<Math.round((hu?12:10)*DIF[dif].cnt))spawnMix()}
  pl.hp=Math.min(pl.mhp,pl.hp+(hu?1:3)*DIF[dif].reg*dt);
  if(pl.hp<=0)end('dead','やられた…',(mode=='crystal'?`水晶 ${got}/${ncr}`:mode=='endless'?`到達ウェーブ ${wave}`:mode=='raid'?`ボス残りHP ${BOSS?Math.ceil(Math.max(0,BOSS.hp)):0}`:`討伐 ${kills}/${dif==2?20:10}`)+` / ${time.toFixed(0)} 秒`);
 }
@@ -682,18 +725,19 @@ function hud(){
   const dx=b.x-pl.x,dz=b.z-pl.z,a=Math.atan2(Math.cos(yaw)*dx-Math.sin(yaw)*dz,-Math.sin(yaw)*dx-Math.cos(yaw)*dz);
   n=`${mode=='crystal'?'水晶':'敵'} ${AR[(Math.round(a/(Math.PI/4))+8)%8]} ${Math.round(bd)}m`}
  const J=JOBS[job],te=aimEnemy();
- let jl=`【${J.n}】HP ${Math.ceil(Math.max(0,pl.hp))}/${pl.mhp}  攻撃 ${pAtk()}`;if(job==3)jl+=`  仲間 ${AL.filter(a=>!a.cpu).length}/12  ストック ${stock}`;if(job==1)jl+=`  (強化まで${pgNeed()-pgH}発)`;if(job==4&&kia>0)jl+=`  きあい${kia.toFixed(1)}s`;if(job==4&&tau>0)jl+=`  挑発${Math.ceil(tau)}s`;if(hot>0&&job==4)jl+=`  回復中${Math.ceil(hot)}s`;if(job==0&&skT>0)jl+=`  【${RN[lastSk]}!】`;if(job==0&&bf>0)jl+=`  バフ${bf.toFixed(1)}s`;if(job==5&&zg==2)jl+=`  ホバー${hov.toFixed(1)}s`;if(DC)jl+=`  身代わり ${Math.ceil(DC.hp)}/${DC.mhp}`;
+ let jl=`【${J.n}】HP ${Math.ceil(Math.max(0,pl.hp))}/${pl.mhp}  攻撃 ${pAtk()}`;if(job==3)jl+=`  仲間 ${AL.filter(a=>!a.cpu).length}/12  ストック ${stock}`;if(job==1)jl+=`  (強化まで${pgNeed()-pgH}発)`;if(job==4&&kia>0)jl+=`  きあい${kia.toFixed(1)}s`;if(job==4&&tau>0)jl+=`  挑発${Math.ceil(tau)}s`;if(hot>0&&job==4)jl+=`  回復中${Math.ceil(hot)}s`;if(job==0&&skT>0)jl+=`  【${RN[lastSk]}!】`;if(job==0&&bf>0)jl+=`  バフ${bf.toFixed(1)}s`;if(job==6&&mg>0)jl+=`  マジック${mg.toFixed(1)}s マーク${EN.filter(e=>e.mk).length}`;if(job==5&&zg==2)jl+=`  ホバー${hov.toFixed(1)}s`;if(DC)jl+=`  身代わり ${Math.ceil(DC.hp)}/${DC.mhp}`;
  $('t').textContent=(mode=='crystal'?`水晶 ${got}/${ncr}  ブロック ${blocks}  撃破 ${kills}`:mode=='endless'?`WAVE ${wave}  敵 ${EN.length}体  砦 ${FT?Math.ceil(Math.max(0,FT.hp)):0}`:mode=='raid'?`レイド  パーティ ${1+AL.filter(a=>a.t>=10).length}/8  ブロック ${blocks}`:`討伐 ${kills}/${dif==2?20:10}  ブロック ${blocks}`)+`\n${jl}\n${n}  ${mode=='endless'||mode=='raid'?'':DN[dif]}  seed ${seed}`+(te?`\n標的 HP ${Math.ceil(te.hp)}/${te.mhp}`:'');
  $('hpb').style.width=Math.max(0,pl.hp/pl.mhp*100)+'%';$('bs').textContent='置く: '+HN[sel];$('bA').textContent=J.btn;bossBar();
- const kb=$('bk'),hb=$('bh');kb.style.display=job<=5?'block':'none';hb.style.display=job==0||job==3||job==4||job==5?'block':'none';
+ const kb=$('bk'),hb=$('bh');kb.style.display=job<=6?'block':'none';hb.style.display=job==0||job==3||job==4||job==5||job==6?'block':'none';
  if(job==4){kb.textContent=rage>=100?'衝撃波!\n+回復':cdk>0?'きあい\n'+Math.ceil(cdk)+'s':'きあいだめ\n'+Math.floor(rage)+'%';kb.classList.toggle('rdy',rage>=100)}else if(job==3){kb.textContent='召喚\n×'+stock;kb.classList.toggle('rdy',stock>0)}else if(job==0){kb.textContent='必殺技\n'+Math.floor(sg)+'%';kb.classList.toggle('rdy',sg>=100)}else if(job==1||job==2){kb.textContent=(job==1?'身代わり':'ビーム')+(cdk>0?'\n'+Math.ceil(cdk)+'s':'');kb.classList.toggle('rdy',cdk<=0&&!DC)}
  if(job==0)hb.textContent=RN[rsk]+(cdh>0?'\n'+Math.ceil(cdh)+'s':'');else if(job==3){hb.textContent='合成\n(2消費)';hb.classList.toggle('rdy',stock>=2)}else if(job==4)hb.textContent=tau>0?'挑発中\n'+Math.ceil(tau)+'s':cdh>0?'挑発\n'+Math.ceil(cdh)+'s':'挑発';
  if(job==5){kb.textContent='ゼロG'+(cdk>0?'\n'+Math.ceil(cdk)+'s':'');kb.classList.toggle('rdy',cdk<=0&&!zg);hb.textContent='ダイブ'+(cdh>0?'\n'+Math.ceil(cdh)+'s':'');hb.classList.toggle('rdy',cdh<=0&&!pl.g)}
+ if(job==6){kb.textContent='メガボム'+(cdk>0?'\n'+Math.ceil(cdk)+'s':'');kb.classList.toggle('rdy',cdk<=0&&mg<=0);hb.textContent=mg>0?'マジック\n'+Math.ceil(mg)+'s':'マジック'+(cdh>0?'\n'+Math.ceil(cdh)+'s':'');hb.classList.toggle('rdy',cdh<=0&&mg<=0)}
 }
 let last=performance.now(),hudT=0,vp;
 // ===== ネオンの光のにじみ(加算合成) =====
-const GQ=[];const glow=(o,s,k,a)=>GQ.push([o,s,k,a]);
-function flushGlow(){if(!GQ.length)return;gl.blendFunc(gl.SRC_ALPHA,gl.ONE);gl.depthMask(false);for(const q of GQ)draw(cBuf,36,q[0],q[1],0,q[2],q[3]);gl.depthMask(true);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);GQ.length=0}
+const GQ=[];const glow=(o,s,k,a)=>GQ.push([o,s,k,a,GSo]);
+function flushGlow(){if(!GQ.length)return;gl.blendFunc(gl.SRC_ALPHA,gl.ONE);gl.depthMask(false);for(const q of GQ){GSo=q[4];draw(cBuf,36,q[0],q[1],0,q[2],q[3])}GSo=null;gl.depthMask(true);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);GQ.length=0}
 // ===== 敵のデザイン(ここを書き換えると見た目を変えられます) =====
 // c: ネオンの色(RGB 0〜1) / s: 大きさ。モチーフは「バグ・ノイズ」(ズレる・色ずれ・ドット)
 const ES={sm:{c:[1,.1,.55],s:.9},big:{c:[.6,.25,1],s:1.9},rng:{c:[1,.85,.1],s:1.1},fly:{c:[.1,.85,1],s:.8},boss:{c:[.9,.05,.3],s:5.7}};
@@ -706,6 +750,7 @@ function drawDrone(e,P,c){ // 飛行型=ドローン(本体+4つのローター+
  draw(cBuf,36,[x,y-.2,z],.2,0,[1,.1,.2]);
  glow([x,y-.2,z],.55,[1,.1,.2],.35);glow([x,y,z],1.4,c,.15)}
 function drawEnemy(e){
+ GSo=e.mk?0:null;
  const tk=Math.floor(time*14),rn=k=>{const v=Math.sin(tk*12.9898+e.ph*78.233+k*37.719)*43758.5453;return v-Math.floor(v)};
  const st=e.boss?ES.boss:e.fly?ES.fly:e.rng?ES.rng:e.big?ES.big:ES.sm,s=st.s;
  let c=st.c;
@@ -725,12 +770,15 @@ function drawEnemy(e){
   const np=e.boss?10:e.big?6:3;
   for(let i=0;i<np;i++){const an=rn(10+i)*6.283,rr=s*(.7+rn(20+i)*.8),dy=(rn(30+i)-.5)*s*1.4;
    draw(cBuf,36,[e.x+Math.cos(an)*rr,e.y+dy,e.z+Math.sin(an)*rr],(.07+.1*rn(40+i))*(e.boss?3:1),0,rn(50+i)>.5?[.6,1,1]:[1,.5,1])}}
- if(e.boss){for(const sg of[-1,1]){const q=[e.x+sg*1.3,e.y+.9,e.z+2.9];draw(cBuf,36,q,.7,0,[.3,1,1]);glow(q,1.6,[.3,1,1],.3)}}}
+ if(e.boss){for(const sg of[-1,1]){const q=[e.x+sg*1.3,e.y+.9,e.z+2.9];draw(cBuf,36,q,.7,0,[.3,1,1]);glow(q,1.6,[.3,1,1],.3)}} if(e.mk){const q=[e.x,e.y+(e.boss?4:ES.sm.s+.4)+Math.sin(time*6)*.1,e.z];draw(cBuf,36,q,[.3,.3,.3],time*4,[1,.9,.2]);glow(q,.9,[1,.9,.2],.4);glow([e.x,e.y,e.z],2.2,[1,.9,.2],.15)} // マーク
+ GSo=null;
+}
 function loop(now){
  requestAnimationFrame(loop);
  const dt=Math.min(.05,(now-last)/1000);last=now;
  if(state=='play')update(dt);
  if((hudT+=dt)>.15){hudT=0;hud()}
+ {const g=mg>0?1:0;if(g!==GS){GS=g;const l=SKY[0]*.3+SKY[1]*.59+SKY[2]*.11;gl.clearColor(g?l:SKY[0],g?l:SKY[1],g?l:SKY[2],1)}}
  gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
  gl.uniformMatrix4fv(uM,false,viewProj());
  draw(wBuf,wN,[0,0,0],1,0,[1,1,1]);
@@ -753,8 +801,13 @@ function loop(now){
   if(a.t==10)draw(cBuf,36,[a.x+.55,a.y+.05,a.z],[.1,1.3,.1],0,[.9,.93,1]); // 剣
   if(a.cpu&&a.t>=10)draw(cBuf,36,[a.x,a.y+(g?1.5:1.2),a.z],[1.2*Math.max(0,a.hp/a.mhp),.1,.1],0,[.3,1,.4])});
  if(DC){draw(cBuf,36,[DC.x,DC.y-.2,DC.z],[.6,1.1,.4],0,[.95,.6,.25]);draw(cBuf,36,[DC.x,DC.y+.6,DC.z],.44,0,[1,.85,.7])}
- PR.forEach(p=>{draw(cBuf,36,[p.x,p.y,p.z],p.s,0,p.c);glow([p.x,p.y,p.z],p.s*2.2,p.c,.3)});
+ BM.forEach(b=>{const q=[b.x,b.y,b.z];draw(cBuf,36,q,1.5,time*5,[1,.2,.9]);glow(q,2.4,[1,.2,.9],.35);glow(q,3.4,[.2,1,1],.12)}); // メガボム
+ PR.forEach(p=>{if(p.card){draw(cBuf,36,[p.x,p.y,p.z],[.3,.04,.44],time*18+p.rot,p.c);glow([p.x,p.y,p.z],.8,p.c,.3)}else{draw(cBuf,36,[p.x,p.y,p.z],p.s,0,p.c);glow([p.x,p.y,p.z],p.s*2.2,p.c,.3)}});
  FX.forEach(f=>{
+  if(f.k=='nz'){const u=f.t/f.l; // ノイズが散らばる爆発
+   for(const p of f.ps){if(Math.sin(time*60+p[5]*50)<-.2)continue;const m=f.t*(1-.4*u),q=[f.x+p[0]*m,f.y+p[1]*m,f.z+p[2]*m],c=NZ[p[4]];draw(cBuf,36,q,p[3]*(1-u)+.03,0,c);if(p[3]>.2)glow(q,p[3]*2.2,c,.3*(1-u))}
+   for(let i=0;i<5;i++)draw(cBuf,36,[f.x+Math.sin(time*40+i*7)*1.2,f.y+(i-2)*.45,f.z+Math.cos(time*33+i*5)*.8],[2.6*(1-u)+.2,.07,.5],0,NZ[i%3]); // 横にズレるグリッチの帯
+   glow([f.x,f.y,f.z],3.6*(1-u)+.4,[1,.3,1],.35*(1-u));return}
   if(f.k=='hit'){const u=f.t/f.l,sz=.16*(1-u)+.03;for(const v of f.ps){const q=[f.x+v[0]*f.t,f.y+v[1]*f.t-6*f.t*f.t,f.z+v[2]*f.t];draw(cBuf,36,q,sz,0,f.c);glow(q,sz*3,f.c,.35*(1-u))}glow([f.x,f.y,f.z],1.2*(1-u)+.2,f.c,.4*(1-u));return}
   if(f.k=='swing'){const u=f.t/f.l;for(let i=0;i<9;i++){const an=(i/8-.5)*2+(u-.5),c=Math.cos(an),sn=Math.sin(an),q=[f.x+(f.dx*c-f.dz*sn)*2.3,f.y,f.z+(f.dx*sn+f.dz*c)*2.3];draw(cBuf,36,q,.14*(1-u)+.04,0,f.c);glow(q,.45,f.c,.3*(1-u))}return}
   if(f.k=='lz'){const u=1-f.t/f.l;for(let i=0;i<=8;i++){const a=i/8,q=[f.x1+(f.x2-f.x1)*a,f.y1+(f.y2-f.y1)*a,f.z1+(f.z2-f.z1)*a];draw(cBuf,36,q,.09*u+.03,0,[1,.2,.4]);glow(q,.3,[1,.2,.4],.4*u)}return}
