@@ -114,6 +114,14 @@ html,body{background:#05020f;color:#c8f4ff;font-family:"SF Mono",ui-monospace,Me
 #hd img{display:block;max-width:100%;max-height:49%;min-height:0;object-fit:contain}
 @media (orientation:landscape){#hd img+img{display:none}#hd img{max-height:100%}}
 @media (orientation:portrait){#hd img{width:100%;height:auto;flex:none}}
+#ov .locked{border-color:#556!important;color:#889!important;background:#fff1!important;box-shadow:none!important;text-shadow:none!important;filter:grayscale(1);opacity:.75}
+.ql{width:min(92vw,440px);text-align:left;margin:0 auto}
+.qh{font-weight:700;color:#0ff;margin-bottom:6px}
+.qr{padding:6px 10px;margin:6px 0;border:1px solid #0ff5;border-radius:6px;background:#0ff1;font-size:13px}
+.qr.qd{border-color:#7f7;background:#7f71}
+.qr small{color:#9fd}
+.qb{height:8px;background:#fff2;margin:5px 0;border-radius:4px;overflow:hidden}
+.qb i{display:block;height:100%;background:linear-gradient(90deg,#f0f,#0ff)}
 </style>
 </head>
 <body>
@@ -283,11 +291,11 @@ const JOBS=[
  {n:'ナノ･ブースター',hp:90,atk:2,reach:3,cd:.18,spd:1.25,btn:'連打',d:'高速近接 HP90・攻撃2。殴るほど成長(20発で+1)\n身代わり人形(HP150)で敵を挑発'},
  {n:'レールガンナー',hp:70,atk:5,reach:0,cd:.25,spd:1,btn:'長押し\n溜め撃ち',d:'遠距離 HP70・長押しで溜め撃ち(5〜25)\nビーム技:貫通10ダメ+ノックバック&スロー'},
  {n:'ネクロ･ハッカー',hp:80,atk:5,reach:0,cd:.5,spd:1,btn:'魔法',d:'HP80・攻撃5の遠距離魔法。倒した敵がストック→\n召喚で一気に呼び出し、合成で2匹→強化1匹'},
- {n:'ヘビープロテクター',hp:300,atk:5,reach:3.6,cd:1,spd:.8,btn:'攻撃',d:'HP300のタンク・攻撃5(遅め)・移動やや遅い\nきあいだめ/挑発/怒りの衝撃波(+3秒で30回復)'},
+ {n:'ヘビープロテクター',hp:300,atk:5,reach:3.6,cd:1,spd:.5,btn:'攻撃',d:'HP300のタンク・攻撃5(遅め)・移動やや遅い\nきあいだめ/挑発/怒りの衝撃波(+3秒で30回復)'},
  {n:'サイバー･スカイ',hp:90,atk:10,reach:0,cd:.5,spd:1,btn:'プラズマ',d:'HP90・プラズマ弾10ダメージ(連射不可)\nゼロG(上昇→ホバリング)とダイブ(衝撃波25)'},
  {n:'ファントム･ジョーカー',hp:85,atk:6,reach:0,cd:.5,spd:1,btn:'カード',d:'HP85・カード1〜5枚を扇状に貫通(各6ダメ)\nメガボム(範囲40)・マジック(時間停止+マーク→テレポート)'},
  {n:'ネオン･スパイダー',hp:120,atk:5,reach:0,cd:.3,spd:1,btn:'ワイヤー',d:'HP120・壁を登れる。ワイヤーで敵を引き寄せ/壁へ急接近\nウェブ(スロー+攻撃ダウン)・ヴェノム(毒)'},
- {n:'ベクトル･スラッシャー',hp:150,atk:10,reach:0,cd:.8,spd:1,btn:'スラッシュ\n長押し',d:'HP150・HP75未満で火力2倍\n溜め突進の大剣・エッジ・ロックオン(連鎖斬り)'}];
+ {n:'ベクトル･スラッシャー',hp:150,atk:10,reach:0,cd:.8,spd:.5,btn:'スラッシュ\n長押し',d:'HP150・HP75未満で火力2倍\n溜め突進の大剣・エッジ・ロックオン(連鎖斬り)'}];
 const AC=[[.15,.6,1],[.85,.3,1],[.3,1,.6]],AH=[30,20,20];
 const rad=e=>e.boss?3.5:e.big?1:0,clmp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const pAtk=()=>job==1?pgA:JOBS[job].atk,pgNeed=()=>pgA>=30?55:pgA>=20?25:20; // 拳闘士: 殴った回数で成長(15発→攻撃20以降は20発→30以降は50発で+1・上限なし)
@@ -312,7 +320,7 @@ function dmgEnemy(e,d,sx=pl.x,sz=pl.z,dot){
  if(!dot){let hx=e.x,hz=e.z;if(e.boss){const q=Math.hypot(sx-e.x,sz-e.z)||1;hx+=(sx-e.x)/q*3.6;hz+=(sz-e.z)/q*3.6}
   hitFX(hx,e.y,hz,d>=20?[1,.4,1]:[.6,1,1],d>=20?14:8,e.boss?2:1)} // 命中の火花
  const dx=e.x-sx,dz=e.z-sz,l=Math.hypot(dx,dz)||1;if(!e.boss&&!dot){e.x=Math.max(1,Math.min(W-2,e.x+dx/l*.6));e.z=Math.max(1,Math.min(D-2,e.z+dz/l*.6))}
- if(e.hp<=0){e.dead=1;lastK={x:e.x,z:e.z};hitFX(e.x,e.y,e.z,[1,.3,.8],e.boss?40:e.big?26:16,e.boss?3:1.5);FX.push({k:'boom',x:e.x,z:e.z,y:e.y-.3,r:e.big?3:1.6,t:0,l:.3,c:[.3,1,1]}); /* 撃破: デジタル崩壊 */const i=EN.indexOf(e);if(i>=0)EN.splice(i,1);kills+=e.big?2:1;blocks=Math.min(99,blocks+(e.big?5:2));if(job==3&&stock<30)stock++}
+ if(e.hp<=0){e.dead=1;lastK={x:e.x,z:e.z};hitFX(e.x,e.y,e.z,[1,.3,.8],e.boss?40:e.big?26:16,e.boss?3:1.5);FX.push({k:'boom',x:e.x,z:e.z,y:e.y-.3,r:e.big?3:1.6,t:0,l:.3,c:[.3,1,1]}); /* 撃破: デジタル崩壊 */const i=EN.indexOf(e);if(i>=0)EN.splice(i,1);kills+=e.big?2:1;SV.kills++;svDirty=1;blocks=Math.min(99,blocks+(e.big?5:2));if(job==3&&stock<30)stock++}
 }
 function bolt(){ // サモナーの通常攻撃: 遠距離の魔法
  const f=fwd();atk=JOBS[3].cd;if(mergeAB&&!aimEnemy(14))act(0);PR.push({x:pl.x+f[0]*.7,y:pl.y+1.45+f[1]*.7,z:pl.z+f[2]*.7,vx:f[0]*22,vy:f[1]*22,vz:f[2]*22,dmg:5,life:.85,g:0,s:.18,c:[.7,.5,1]})}
@@ -363,23 +371,39 @@ function slashRelease(){ // 通常攻撃: 溜め(最大3.5秒)→最大10マス�
  const d=dashDir();DS={type:'sl',dx:d[0],dy:d[1],dz:d[2],left:1+9*r,sp:40,dmg:10+10*r,max:r>=.999,t:0,k:0};atk=.8}
 function edge(){ // スキル1: 大きな三日月の斬撃を前方へ(幅4マス・5ダメージ・貫通)。CT9秒
  if(state!='play'||job!=8||cdk>0||DS)return;cdk=9;const f=fwd(),hl=Math.hypot(f[0],f[2])||1;
- EG.push({x:pl.x,y:pl.y+1.2,z:pl.z,dx:f[0]/hl,dz:f[2]/hl,t:0,l:.75,h:[]})}
+ EG.push({x:pl.x,y:pl.y+1.2,z:pl.z,dx:f[0],dy:f[1],dz:f[2],rx:f[2]/hl,rz:-f[0]/hl,t:0,l:.75,h:[]})} /* 向いた方向(上下も)へ飛ぶ */
 function edgeTick(dt){
- for(let i=EG.length-1;i>=0;i--){const m=EG[i];m.t+=dt;m.x+=m.dx*20*dt;m.z+=m.dz*20*dt;
-  for(const e of EN){if(m.h.includes(e))continue;const rx=e.x-m.x,rz=e.z-m.z,af=rx*m.dx+rz*m.dz,lat=Math.abs(rx*m.dz-rz*m.dx);
-   if(af>-1&&af<1.6+rad(e)&&lat<2+rad(e)&&Math.abs(e.y-m.y)<3){m.h.push(e);dmgEnemy(e,5*dm8(),m.x,m.z)}}
+ for(let i=EG.length-1;i>=0;i--){const m=EG[i];m.t+=dt;m.x+=m.dx*20*dt;m.y+=m.dy*20*dt;m.z+=m.dz*20*dt;
+  for(const e of EN){if(m.h.includes(e))continue;
+   const rx=e.x-m.x,ry=e.y-m.y,rz=e.z-m.z,af=rx*m.dx+ry*m.dy+rz*m.dz,lt=rx*m.rx+rz*m.rz,
+    px=rx-m.dx*af-m.rx*lt,py=ry-m.dy*af,pz=rz-m.dz*af-m.rz*lt;
+   if(af>-1&&af<1.6+rad(e)&&Math.abs(lt)<2+rad(e)&&Math.hypot(px,py,pz)<3+rad(e)){m.h.push(e);dmgEnemy(e,5*dm8(),m.x,m.z)}}
   if(m.t>m.l)EG.splice(i,1)}}
-function lockOn(){ // スキル2: 10マス突進(10ダメ)→ぶつかった敵の周囲2マスへ連鎖して約2秒後に15ダメージ。CT12秒
- if(state!='play'||job!=8||cdh>0||DS)return;cdh=12;const d=dashDir();DS={type:'lk',dx:d[0],dy:d[1],dz:d[2],left:10,sp:55,dmg:10,t:0,k:0}}
+function lockOn(){ // スキル2: 狙った敵(いなければ前方)へ最大10マス突進。突進中は壁・敵をすり抜ける。CT12秒
+ if(state!='play'||job!=8||cdh>0||DS)return;cdh=12;
+ const f=fwd(),cx=pl.x,cy=pl.y+1,cz=pl.z;let best=null,bd=0;
+ for(const e of EN){if(e.fz)continue;const vx=e.x-cx,vy=e.y-cy,vz=e.z-cz,d=Math.hypot(vx,vy,vz)||1;if(d>12+rad(e))continue;
+  const dot=(vx*f[0]+vy*f[1]+vz*f[2])/d;if(dot>.8&&dot>bd){bd=dot;best=e}} // 画面の中心に近い敵をロックオン
+ let dx,dy,dz;
+ if(best){const vx=best.x-cx,vy=best.y-cy,vz=best.z-cz,d=Math.hypot(vx,vy,vz)||1;dx=vx/d;dy=vy/d;dz=vz/d}else{const q=dashDir();dx=q[0];dy=q[1];dz=q[2]}
+ DS={type:'lk',dx,dy,dz,left:10,sp:15,dmg:10,t:0,k:0,acc:1.2}}
+function safeLand(){ // 突進のあとの安全着地: めり込んでいたら上へ出して、真上に2マス飛ぶ→着地
+ pl.x=clmp(pl.x,1,W-2);pl.z=clmp(pl.z,1,D-2);let k=0;while(hit(pl.x,pl.y,pl.z)&&k<40){pl.y+=1;k++}
+ pl.vy=10.2;pl.g=0}
 function dashTick(dt){
- const d=DS;if(!d)return;const step=d.sp*dt,n=Math.ceil(step/.5),h=step/n;let ht=null;
+ const d=DS;if(!d)return;const ph=d.type=='lk'; // ロックオンの突進は壁・敵をすり抜ける(フェーズ)
+ const step=d.sp*dt,n=Math.ceil(step/.5),h=step/n;let ht=null;
  for(let k=0;k<n&&d.left>0&&!ht;k++){
-  const nx=pl.x+d.dx*h,nz=pl.z+d.dz*h;let ny=pl.y+d.dy*h;
-  if(hit(nx,ny,nz)){if(!hit(nx,ny+1.05,nz))ny+=1.05;else{d.left=0;break}} // 1マスの段差は乗り越える
+  let nx=pl.x+d.dx*h,nz=pl.z+d.dz*h,ny=pl.y+d.dy*h;
+  if(ph){nx=clmp(nx,1,W-2);nz=clmp(nz,1,D-2);ny=Math.max(1,Math.min(H-3,ny))}
+  else if(hit(nx,ny,nz)){if(!hit(nx,ny+1.05,nz))ny+=1.05;else{d.left=0;break}} // 通常攻撃: 1マスの段差は乗り越える
   pl.x=nx;pl.y=ny;pl.z=nz;pl.vy=0;d.left-=h;
-  if(FX.length<170)FX.push({k:'ai',x:pl.x,y:pl.y+1,z:pl.z,t:0,l:.4,c:d.type=='lk'?[1,.3,.5]:[.4,1,1]}); // 残像
-  for(const e of EN){if(e.fz)continue;if(Math.hypot(e.x-pl.x,e.y-(pl.y+1),e.z-pl.z)<1.1+rad(e)){ht=e;break}}}
- if(ht||d.left<=0){DS=null;if(d.type=='sl')doSlash(d);else lockHit(ht)}}
+  if(ph){d.acc+=h;if(d.acc>=1.2&&FX.length<175){d.acc=0;const hl=Math.hypot(d.dx,d.dz)||1;FX.push({k:'ar',x:pl.x,y:pl.y+.6,z:pl.z,dx:d.dx/hl,dz:d.dz/hl,t:0,l:3})}} // 水色の矢印の残像(3秒)
+  else if(FX.length<170)FX.push({k:'ai',x:pl.x,y:pl.y+1,z:pl.z,t:0,l:.4,c:[.4,1,1]});
+  for(const e of EN){if(e.fz)continue;
+   const near=ph?(Math.hypot(e.x-pl.x,e.z-pl.z)<1.1+rad(e)&&Math.abs(e.y-(pl.y+1))<2.5):(Math.hypot(e.x-pl.x,e.y-(pl.y+1),e.z-pl.z)<1.1+rad(e));
+   if(near){ht=e;break}}}
+ if(ht||d.left<=0){DS=null;if(d.type=='sl')doSlash(d);else{lockHit(ht);safeLand()}}}
 function doSlash(d){ // 突進の終わり(または敵に当たった所)で大剣を振るう
  const hl=Math.hypot(d.dx,d.dz)||1,fx=d.dx/hl,fz=d.dz/hl;let any=0;
  FX.push({k:'gs',x:pl.x,y:pl.y+1.1,z:pl.z,dx:fx,dz:fz,t:0,l:.5,mx:d.max});
@@ -387,26 +411,19 @@ function doSlash(d){ // 突進の終わり(または敵に当たった所)で大
   if(dd-rad(e)<4.2&&(tx*fx+tz*fz)/dd>-.1&&Math.abs(e.y-pl.y-1)<4){any=1;dmgEnemy(e,d.dmg*dm8(),pl.x,pl.z);
    if(d.max&&!e.dead&&!e.boss){e.x=clmp(e.x+tx/dd*6,1,W-2);e.z=clmp(e.z+tz/dd*6,1,D-2)}}} // 最大タメ: ノックバック
  if(d.max&&any){pl.hp=Math.min(pl.mhp,pl.hp+30);hitFX(pl.x,pl.y+1,pl.z,[.4,1,.5],10,1)}} // 最大タメ: 30回復
-function lockHit(e){
+function lockHit(e){ // 命中: 10ダメージ → 周囲3マスへ連鎖(訪問済みは除外・最大8体) → 1秒後に全員へ15ダメージ+斬撃
  if(!e)return;dmgEnemy(e,10*dm8(),pl.x,pl.z);FX.push({k:'cs',x:e.x,y:e.y,z:e.z,t:0,l:.25});
- const seen=new Set([e]);let cur=[e],lv=0,cnt=0;
+ const seen=new Set([e]);let cur=[e],cnt=0;
  while(cur.length&&cnt<8){const nx=[];
-  for(const a of cur)for(const b of EN){if(seen.has(b)||b.boss||cnt>=8)continue;
-   if(Math.hypot(a.x-b.x,a.z-b.z)<2+rad(b)){seen.add(b);nx.push(b);cnt++;b.lk=1;LK.push({e:b,from:a,t:2+.35*lv})}}
-  cur=nx;lv++}}
-function hopTo(e){ // 自分の体ごと次の敵へ飛び込む(軌道に残像)
- const ox=pl.x,oy=pl.y,oz=pl.z;let bx=ox-e.x,bz=oz-e.z;const bl=Math.hypot(bx,bz)||1;bx/=bl;bz/=bl;
- for(let k=0;k<8;k++){const an=k*.785,c=Math.cos(an),sn=Math.sin(an),dx=bx*c-bz*sn,dz=bx*sn+bz*c,nx=clmp(e.x+dx*1.6,1,W-2),nz=clmp(e.z+dz*1.6,1,D-2),ny=TOP[(nx|0)+(nz|0)*W]+1;
-  if(!hit(nx,ny,nz)){const n=Math.max(2,Math.ceil(Math.hypot(nx-ox,nz-oz)/.7));
-   for(let j=0;j<=n&&FX.length<170;j++){const a=j/n;FX.push({k:'ai',x:ox+(nx-ox)*a,y:oy+(ny-oy)*a+1,z:oz+(nz-oz)*a,t:0,l:.4,c:[1,.3,.5]})}
-   pl.x=nx;pl.y=ny;pl.z=nz;pl.vy=0;yaw=Math.atan2(-(e.x-nx),-(e.z-nz));return 1}}return 0}
+  for(const a of cur){for(const b of EN){if(cnt>=8)break;if(seen.has(b)||b.boss||b.dead)continue;
+   if(Math.hypot(a.x-b.x,a.z-b.z)<3+rad(b)&&Math.abs(a.y-b.y)<4){seen.add(b);nx.push(b);cnt++;b.lk=1;LK.push({e:b,t:1})}}}
+  cur=nx}}
 function lkTick(dt){
  for(let i=LK.length-1;i>=0;i--){const q=LK[i];q.t-=dt;
   if(q.e.dead){q.e.lk=0;LK.splice(i,1);continue}
-  if(q.t<=0){const e=q.e,a=q.from;e.lk=0;LK.splice(i,1);
-   const o=[pl.x,pl.y+1,pl.z];if(!DS)hopTo(e); // 体ごと連鎖
-   FX.push({k:'lz',x1:o[0],y1:o[1],z1:o[2],x2:e.x,y2:e.y,z2:e.z,t:0,l:.25,c:[.5,1,1]});FX.push({k:'cs',x:e.x,y:e.y,z:e.z,t:0,l:.3});
-   dmgEnemy(e,15*dm8(),a.x,a.z)}}}
+  if(q.t<=0){const e=q.e;e.lk=0;LK.splice(i,1);
+   FX.push({k:'cs',x:e.x,y:e.y,z:e.z,t:0,l:.3});
+   dmgEnemy(e,15*dm8(),pl.x,pl.z)}}}
 const NZ=[[.2,1,1],[1,.2,.9],[1,1,1],[.4,1,.4]];
 let BM=[],mg=0; // メガボム / マジック残り秒
 function cards(){ // 通常攻撃: トランプを1〜5枚、扇状に飛ばす(貫通・各6ダメージ)
@@ -683,10 +700,11 @@ function cpuTick(a,ai,ne,nd,dt){ // レイドのCPU(プレイヤー並みの強�
 }
 function modeTick(dt){
  if(toastT>0){toastT-=dt;if(toastT<=0)ts.style.display='none'}
+ if(svDirty&&(chkT-=dt)<=0){chkT=1.5;const nw=checkQuests();if(nw.length)toast('★クエスト達成! '+nw.join(' / '),4);else saveSV()} // 撃破数などの進行を保存
  if(mode=='chaos'&&mg<=0&&EN.length<15){chaosT-=dt;if(chaosT<=0){chaosHP++;spawnChaos(chaosHP);chaosT=.25}} // 常に15体: 倒されたら復活(体力+1ずつ)
  if(mg<=0){epTick(dt);mtTick(dt)}fortTick(dt);
  if(mode=='endless'){
-  if(!EN.length&&!waveT){waveT=3;const lx=lastK?lastK.x:pl.x,lz=lastK?lastK.z:pl.z;HI={x:lx,z:lz,y:TOP[(lx|0)+(lz|0)*W]+1.6};toast('WAVE '+wave+' クリア! 回復アイテム',2.5)}
+  if(!EN.length&&!waveT){waveT=3;const lx=lastK?lastK.x:pl.x,lz=lastK?lastK.z:pl.z;HI={x:lx,z:lz,y:TOP[(lx|0)+(lz|0)*W]+1.6};{SV.wv=Math.max(SV.wv,wave);svDirty=1;const nw=checkQuests();toast('WAVE '+wave+' クリア! 回復アイテム'+(nw.length?'\n★'+nw.join(' / '):''),nw.length?4:2.5)}}
   else if(waveT>0){waveT-=dt;if(waveT<=0){waveT=0;startWave()}}
  }
  if(HI&&Math.hypot(HI.x-pl.x,HI.z-pl.z)<1.8&&Math.abs(HI.y-pl.y-1)<2.5){pl.hp=Math.min(pl.mhp,pl.hp+50);HI=null;toast('+50 回復',1)}
@@ -759,28 +777,82 @@ $('hd').onclick=closeHide;
 // ===== 画面・状態 =====
 const HELP='左ドラッグ: 移動 / 右ドラッグ: 視点<br>攻撃ボタンで戦おう(ブロックは左下で壊す・置く)';
 function showOv(t,s,bs){$('ot').textContent=t;$('os').innerHTML=s;const c=$('bc');c.innerHTML='';
- for(const[l,f,sub]of bs){const b=document.createElement('button');b.textContent=l;if(sub)b.className=sub==2?'job':'sub';b.onclick=f;c.appendChild(b)}
+ for(const[l,f,sub]of bs){const b=document.createElement('button');b.textContent=l;if(sub)b.className=sub==2?'job':sub==3?'job locked':'sub';b.onclick=f;c.appendChild(b)}
  $('ov').style.display='flex';$('tb').classList.add('np');for(const k in T)delete T[k];js.style.display='none';jsId=null;$('dm').style.opacity=0;hold=0;chg=0;cg.style.display='none'}
 function start(){state='play';$('ov').style.display='none';$('tb').classList.remove('np')}
 let urlSeed;
 const DN=['イージー','ノーマル','ハード'],
  DIF=[{spd:1,dmg:1,cnt:1,hpm:.8,reg:1,spw:1},{spd:1.3,dmg:1.5,cnt:1.4,hpm:.9,reg:.7,spw:.75},{spd:1.6,dmg:2,cnt:1.5,hpm:1,reg:.4,spw:.5}];
 let dif=0;
+// ===== クエスト(実績解禁)システム =====
+// 解禁条件・報酬は QUESTS 配列で一括管理。新しいクエストは行を足すだけ。
+//  id:識別子 / page:0=メインクエスト 1=ジョブクエスト / title / desc:条件の説明 / goal:目標値
+//  prog(S):現在値を返す関数(Sは保存データ) / req:先に達成が必要なクエストid / reward:{mode:'hunt'} や {job:3}
+const SAVE_KEY='vd_quest_v1';
+const newSV=()=>({modes:{crystal:1},jobs:{0:1},cl:{},wv:0,rw:0,rp:0,kills:0,ju:{},done:{}}); // 初期: 水晶集めとモノ･ブレードだけ
+let SV=newSV(),svDirty=0,chkT=0,qFrom=null;
+try{const j=JSON.parse(localStorage.getItem(SAVE_KEY));if(j)SV=Object.assign(newSV(),j)}catch(e){}
+const saveSV=()=>{try{localStorage.setItem(SAVE_KEY,JSON.stringify(SV))}catch(e){}svDirty=0};
+addEventListener('pagehide',()=>{if(svDirty)saveSV()});
+const MODES=['crystal','hunt','endless','raid','chaos'];
+const diffOpen=(m,d)=>d==0||!!SV.cl[m+(d-1)]; // 難易度は1つ下をクリアすると解禁
+const QUESTS=[
+ // --- メインクエスト(モード解放) ---
+ {id:'m1',page:0,title:'水晶の探求者',desc:'水晶集め(ノーマル)をクリア',goal:1,prog:S=>S.cl.crystal1?1:0,reward:{mode:'hunt'}},
+ {id:'m2',page:0,title:'討伐の覚醒',desc:'討伐モード(ノーマル)をクリア',goal:1,prog:S=>S.cl.hunt1?1:0,reward:{mode:'endless'}},
+ {id:'m3',page:0,title:'終わりなき戦い',desc:'エンドレスで5ウェーブ達成',goal:5,prog:S=>S.wv,reward:{mode:'raid'}},
+ {id:'m4',page:0,title:'砦の守護者',desc:'エンドレスで10ウェーブクリア',goal:10,prog:S=>S.wv,reward:{mode:'chaos'}},
+ {id:'m5',page:0,title:'レイド制覇',desc:'レイドバトルに通算5回勝利',goal:5,prog:S=>S.rw,reward:{job:6}},
+ {id:'m6',page:0,title:'最終クエスト',desc:'上のメインクエストを全て達成',goal:5,prog:S=>['m1','m2','m3','m4','m5'].filter(i=>S.done[i]).length,req:['m1','m2','m3','m4','m5'],reward:{job:8}},
+ // --- ジョブクエスト(武器解放。最初はモノ･ブレードだけ) ---
+ {id:'j1',page:1,title:'初陣',desc:'敵を累計50体倒す',goal:50,prog:S=>S.kills,reward:{job:1}},
+ {id:'j2',page:1,title:'最初の水晶',desc:'水晶集め(イージー)をクリア',goal:1,prog:S=>S.cl.crystal0?1:0,reward:{job:2}},
+ {id:'j3',page:1,title:'百戦錬磨',desc:'敵を累計200体倒す',goal:200,prog:S=>S.kills,reward:{job:3}},
+ {id:'j4',page:1,title:'討伐者',desc:'討伐モードをクリア(難易度は問わない)',goal:1,prog:S=>(S.cl.hunt0||S.cl.hunt1||S.cl.hunt2)?1:0,reward:{job:4}},
+ {id:'j5',page:1,title:'ウェーブの兆し',desc:'エンドレスで3ウェーブ達成',goal:3,prog:S=>S.wv,reward:{job:5}},
+ {id:'j6',page:1,title:'レイダー',desc:'レイドバトルに1回参加',goal:1,prog:S=>S.rp,reward:{job:7}},
+];
+const rewardText=q=>{const r=q.reward||{};return[r.mode?MN[r.mode]+'解禁':'',r.job!==undefined?JOBS[r.job].n+'解禁':''].filter(Boolean).join(' / ')||'なし'};
+const lockText=(kind,val)=>{const q=QUESTS.find(q=>q.reward&&q.reward[kind]===val);return q?'解禁条件: '+q.desc:'解禁条件: 未設定'};
+function checkQuests(){ // 達成したクエストの報酬(モード/ジョブ解禁)を反映して、達成した名前を返す
+ const nw=[];let again=1;
+ while(again){again=0;for(const q of QUESTS){if(SV.done[q.id])continue;if(q.req&&!q.req.every(i=>SV.done[i]))continue;
+  if(q.prog(SV)>=q.goal){SV.done[q.id]=1;const r=q.reward||{};if(r.mode)SV.modes[r.mode]=1;if(r.job!==undefined)SV.jobs[r.job]=1;nw.push(q.title+' → '+rewardText(q));again=1;svDirty=1}}}
+ if(nw.length)saveSV();return nw}
+function recordEnd(s){ // 結果の記録(クリア実績・レイド勝利数)
+ if(s=='win'){if(mode=='crystal'||mode=='hunt')SV.cl[mode+dif]=1;if(mode=='raid')SV.rw++}
+ svDirty=1;const nw=checkQuests();saveSV();return nw}
+function questMenu(pg=0){ // クエスト一覧(進捗バー付き)。ページ1=メイン、ページ2=ジョブ
+ const qs=QUESTS.filter(q=>q.page==pg);
+ let h='<div class="ql"><div class="qh">'+(pg?'ジョブクエスト(武器の解放)':'メインクエスト(モードの解放)')+'</div>';
+ for(const q of qs){const v=Math.min(q.goal,q.prog(SV)),dn=SV.done[q.id],av=!q.req||q.req.every(i=>SV.done[i]);
+  h+=`<div class="qr${dn?' qd':''}"><b>${dn?'✔ ':av?'':'🔒 '}${q.title}</b><br>${q.desc}<div class="qb"><i style="width:${v/q.goal*100}%"></i></div><small>${v}/${q.goal}　報酬: ${rewardText(q)}</small></div>`}
+ h+='</div>';
+ showOv('クエスト ('+(pg+1)+'/2)',h,[[pg?'◀ メインクエスト':'ジョブクエスト ▶',()=>questMenu(1-pg),1],
+  ['進行をリセット',()=>{if(confirm('クエストの進行データを全て消します。よろしいですか?')){SV=newSV();saveSV();questMenu(pg)}},1],
+  ['全解放(テスト用)',()=>{for(const m of MODES)SV.modes[m]=1;JOBS.forEach((j,i)=>SV.jobs[i]=1);for(const q of QUESTS)SV.done[q.id]=1;for(const m of['crystal','hunt']){SV.cl[m+0]=SV.cl[m+1]=1}saveSV();questMenu(pg)},1],
+  ['戻る',qFrom||menu,1]])}
 const noDif=m=>m=='endless'||m=='raid'||m=='chaos'; // 難易度選択のないモード
-const play=(m,j=job)=>{mode=m;job=j;if(noDif(m))dif=0;newWorld(urlSeed);urlSeed=void 0;start()};
+const play=(m,j=job)=>{if(!SV.modes[m]||!SV.jobs[j]||(!noDif(m)&&!diffOpen(m,dif)))return; // 未解禁は開始できない
+ mode=m;job=j;if(noDif(m))dif=0;SV.ju[j]=1;if(m=='raid')SV.rp++;svDirty=1;checkQuests();newWorld(urlSeed);urlSeed=void 0;start()};
 function jobMenu(m,pg=0){ // ジョブ選択: 5人ずつページ分け
  state='menu';const per=5,pages=Math.ceil(JOBS.length/per);
- showOv('ジョブを選ぶ ('+(pg+1)+'/'+pages+')',MN[m]+(noDif(m)?'':' / '+DN[dif]),[...JOBS.slice(pg*per,pg*per+per).map((J,i)=>[J.n+'\n'+J.d,()=>play(m,pg*per+i),2]),
+ showOv('ジョブを選ぶ ('+(pg+1)+'/'+pages+')',MN[m]+(noDif(m)?'':' / '+DN[dif]),[...JOBS.slice(pg*per,pg*per+per).map((J,i)=>{const k=pg*per+i;return SV.jobs[k]?[J.n+'\n'+J.d,()=>play(m,k),2]:['🔒 '+J.n+'\n'+lockText('job',k),()=>{},3]}),
   ...(pg<pages-1?[['次のページ ▶',()=>jobMenu(m,pg+1),1]]:[]),...(pg>0?[['◀ 前のページ',()=>jobMenu(m,pg-1),1]]:[]),['戻る',()=>noDif(m)?menu():difMenu(m),1]])}
 const stickLabel=()=>'操作スティック: '+(stick?'表示中':'非表示')+'(タップで切替)';
 const aimLabel=()=>'敵へのエイム補正: '+(aimOn?'ON':'OFF')+'(タップで切替)';
 const mergeLabel=()=>'攻撃と壊すを同じに: '+(mergeAB?'ON':'OFF')+'(攻撃ボタンで壊す)';
 function ctrlMenu(){state='menu';showOv('操作設定','ボタンの配置・大きさ・表示を変えられます',[['ボタンの配置・大きさ・表示を編集',enterEdit,1],[stickLabel(),()=>{setStick(!stick);ctrlMenu()},1],[aimLabel(),()=>{setAim(!aimOn);ctrlMenu()},1],[mergeLabel(),()=>{setMerge(!mergeAB);ctrlMenu()},1],['戻る',pauseMenu,1]])}
-function pauseMenu(){state='menu';showOv('メニュー',HELP,[['再開',start],['操作設定',ctrlMenu,1],['新しいワールド',()=>play(mode),1],['ジョブ変更',()=>jobMenu(mode),1],['メイン画面に戻る',menu,1]])}
+function pauseMenu(){state='menu';showOv('メニュー',HELP,[['再開',start],['クエスト',()=>{qFrom=pauseMenu;questMenu(0)},1],['操作設定',ctrlMenu,1],['新しいワールド',()=>play(mode),1],['ジョブ変更',()=>jobMenu(mode),1],['メイン画面に戻る',menu,1]])}
 const MN={crystal:'水晶集めモード',hunt:'討伐モード',endless:'エンドレスモード',raid:'レイドバトル',chaos:'カオスモード'};
-function menu(){state='menu';showOv('VOXEL DRIFT','モードを選んでください',[['水晶集めモード\n水晶を10個集める(ハードは15個)',()=>difMenu('crystal'),2],['討伐モード\n敵を10体倒す(ハードは20体)',()=>difMenu('hunt'),2],['エンドレスモード\n終わりなきウェーブ。何ウェーブ耐える?',()=>jobMenu('endless'),2],['レイドバトル\n8人で特大ボスに挑む',()=>jobMenu('raid'),2],['カオスモード\n常に15体の敵! 倒すと復活して体力+1',()=>jobMenu('chaos'),2]])}
-function difMenu(m){state='menu';showOv('難易度を選ぶ',MN[m],[['イージー\n初心者向け',()=>{dif=0;jobMenu(m)},2],['ノーマル\n敵が増えて強くなる',()=>{dif=1;jobMenu(m)},2],['ハード\n敵が大量で強い',()=>{dif=2;jobMenu(m)},2],['戻る',menu,1]])}
-function end(s,t,m){state=s;showOv(t,m,[['もう一度',()=>play(mode)],['ジョブ変更',()=>jobMenu(mode),1],['メイン画面へ',menu,1]])}
+function menu(){state='menu';
+ const D={crystal:'水晶集めモード\n水晶を10個集める(ハードは15個)',hunt:'討伐モード\n敵を10体倒す(ハードは20体)',endless:'エンドレスモード\n終わりなきウェーブ。何ウェーブ耐える?',raid:'レイドバトル\n8人で特大ボスに挑む',chaos:'カオスモード\n常に15体の敵! 倒すと復活して体力+1'};
+ const items=MODES.map(m=>SV.modes[m]?[D[m],()=>m=='crystal'||m=='hunt'?difMenu(m):jobMenu(m),2]:['🔒 '+MN[m]+'\n'+lockText('mode',m),()=>{},3]);
+ showOv('VOXEL DRIFT','モードを選んでください',[...items,['クエスト ('+QUESTS.filter(q=>SV.done[q.id]).length+'/'+QUESTS.length+')',()=>{qFrom=menu;questMenu(0)},1]])}
+function difMenu(m){state='menu';const T0=['イージー\n初心者向け','ノーマル\n敵が増えて強くなる','ハード\n敵が大量で強い'];
+ showOv('難易度を選ぶ',MN[m],[...T0.map((t,d)=>diffOpen(m,d)?[t,()=>{dif=d;jobMenu(m)},2]:['🔒 '+DN[d]+'\n解禁条件: '+DN[d-1]+'をクリア',()=>{},3]),['戻る',menu,1]])}
+function resultScreen(t,m,nw){showOv(t,m+(nw.length?'<br><br>★クエスト達成!<br>'+nw.join('<br>'):''),[['もう一度',()=>play(mode)],['ジョブ変更',()=>jobMenu(mode),1],['クエスト',()=>{qFrom=()=>resultScreen(t,m,nw);questMenu(0)},1],['メイン画面へ',menu,1]])}
+function end(s,t,m){state=s;resultScreen(t,m,recordEnd(s))}
 
 function hurt(a0){const a=kia>0?a0*.85:a0;pl.hp-=a;hitFX(pl.x,pl.y+1,pl.z,[1,.25,.45],6,1);if(job==4)rage=Math.min(100,rage+a0*2*(kia>0?2:1)); // きあいだめ中: 被ダメ15%軽減・怒りチャージ2倍
  const d=$('dm');d.style.transition='none';d.style.opacity=1;void d.offsetWidth;d.style.transition='opacity .6s';d.style.opacity=0}
@@ -938,8 +1010,8 @@ function loop(now){
   const L=Math.hypot(tx-hx,ty-hy,tz-hz),n=Math.max(2,Math.ceil(L/.7));
   for(let i=1;i<=n;i++){const a=i/n,q=[hx+(tx-hx)*a,hy+(ty-hy)*a,hz+(tz-hz)*a];draw(cBuf,36,q,.07,0,[1,1,1]);if(i%3==0)glow(q,.35,[.8,.9,1],.3)}}
  EG.forEach(m=>{ // エッジ: 大きな三日月の斬撃波(幅4マス)
-  for(let i=0;i<=14;i++){const a=-1.2+2.4*i/14,l=2.15*Math.sin(a),fw=(Math.cos(a)-Math.cos(1.2))*2.15*.9,x=m.x+m.dz*l+m.dx*fw,z=m.z-m.dx*l+m.dz*fw,sz=.45*Math.cos(a*.9)+.1;
-   for(const yy of[-.4,0,.4])draw(cBuf,36,[x,m.y+yy,z],sz,0,[.7,1,1]);glow([x,m.y,z],1.1,[.4,1,1],.3)}})
+  for(let i=0;i<=14;i++){const a=-1.2+2.4*i/14,l=2.15*Math.sin(a),fw=(Math.cos(a)-Math.cos(1.2))*2.15*.9,x=m.x+m.rx*l+m.dx*fw,y0=m.y+m.dy*fw,z=m.z+m.rz*l+m.dz*fw,sz=.45*Math.cos(a*.9)+.1;
+   for(const yy of[-.4,0,.4])draw(cBuf,36,[x,y0+yy,z],sz,0,[.7,1,1]);glow([x,y0,z],1.1,[.4,1,1],.3)}})
  MS.forEach(m=>{for(let i=0;i<14;i++){const a=i*2.4+time*2.5,b=i*1.3+time*1.7,r=.5+.9*((i*.37)%1),q=[m.x+Math.cos(a)*r,m.y+Math.sin(b)*r*.8,m.z+Math.sin(a)*r];draw(cBuf,36,q,.28+.12*Math.sin(time*6+i),0,i%3?[.6,.1,.9]:[.5,1,.3]);glow(q,.9,[.7,.1,1],.25)}glow([m.x,m.y,m.z],3.4,[.6,.1,1],.2)}); // 毒霧
  BM.forEach(b=>{const q=[b.x,b.y,b.z];draw(cBuf,36,q,1.5,time*5,[1,.2,.9]);glow(q,2.4,[1,.2,.9],.35);glow(q,3.4,[.2,1,1],.12)}); // メガボム
  PR.forEach(p=>{if(p.card){draw(cBuf,36,[p.x,p.y,p.z],[.3,.04,.44],time*18+p.rot,p.c);glow([p.x,p.y,p.z],.8,p.c,.3)}else{draw(cBuf,36,[p.x,p.y,p.z],p.s,0,p.c);glow([p.x,p.y,p.z],p.s*2.2,p.c,.3)}});
@@ -955,6 +1027,10 @@ function loop(now){
   if(f.k=='hit'){const u=f.t/f.l,sz=.16*(1-u)+.03;for(const v of f.ps){const q=[f.x+v[0]*f.t,f.y+v[1]*f.t-6*f.t*f.t,f.z+v[2]*f.t];draw(cBuf,36,q,sz,0,f.c);glow(q,sz*3,f.c,.35*(1-u))}glow([f.x,f.y,f.z],1.2*(1-u)+.2,f.c,.4*(1-u));return}
   if(f.k=='swing'){const u=f.t/f.l;for(let i=0;i<9;i++){const an=(i/8-.5)*2+(u-.5),c=Math.cos(an),sn=Math.sin(an),q=[f.x+(f.dx*c-f.dz*sn)*2.3,f.y,f.z+(f.dx*sn+f.dz*c)*2.3];draw(cBuf,36,q,.14*(1-u)+.04,0,f.c);glow(q,.45,f.c,.3*(1-u))}return}
   if(f.k=='lz'){const u=1-f.t/f.l,cc=f.c||[1,.2,.4];for(let i=0;i<=8;i++){const a=i/8,q=[f.x1+(f.x2-f.x1)*a,f.y1+(f.y2-f.y1)*a,f.z1+(f.z2-f.z1)*a];draw(cBuf,36,q,.09*u+.03,0,cc);glow(q,.3,cc,.4*u)}return}
+  if(f.k=='ar'){const u=f.t/f.l,al=1-u*u,c=[.3,.9,1],px=f.dz,pz=-f.dx; // 水色の矢印
+   for(let i=0;i<4;i++){const q=[f.x-f.dx*i*.35,f.y,f.z-f.dz*i*.35];glow(q,.22,c,.55*al);if(i%2==0)glow(q,.45,c,.15*al)}
+   for(const sg of[-1,1])for(let i=0;i<4;i++){const q=[f.x+f.dx*.7-f.dx*i*.28+px*sg*i*.28,f.y,f.z+f.dz*.7-f.dz*i*.28+pz*sg*i*.28];glow(q,.22,c,.55*al)}
+   glow([f.x+f.dx*.7,f.y,f.z+f.dz*.7],.6,c,.25*al);return}
   if(f.k=='ai'){const u=f.t/f.l;glow([f.x,f.y-.2,f.z],[.7,1.3,.45],f.c,.4*(1-u));glow([f.x,f.y+.7,f.z],.6,f.c,.35*(1-u));return} // 残像
   if(f.k=='cs'){const u=f.t/f.l,sz=.13*(1-u)+.03;for(let i=-5;i<=5;i++){const o=i*.3;for(const q of[[f.x+o,f.y+o,f.z],[f.x-o,f.y+o,f.z],[f.x,f.y+o,f.z+o],[f.x,f.y+o,f.z-o]]){draw(cBuf,36,q,sz,0,[.8,1,1])}}glow([f.x,f.y,f.z],2.2*(1-u)+.3,[.5,1,1],.4*(1-u));return} // 交差する斬撃
   if(f.k=='gs'){const u=f.t/f.l,hd=Math.min(1,u*1.6),c=f.mx?[1,.4,1]:[.6,1,1],R=3.3; // 大剣のスラッシュ(どっしり大きく)
