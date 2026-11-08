@@ -118,10 +118,20 @@ html,body{background:#05020f;color:#c8f4ff;font-family:"SF Mono",ui-monospace,Me
 .ql{width:min(92vw,440px);text-align:left;margin:0 auto}
 .qh{font-weight:700;color:#0ff;margin-bottom:6px}
 .qr{padding:6px 10px;margin:6px 0;border:1px solid #0ff5;border-radius:6px;background:#0ff1;font-size:13px}
-.qr.qd{border-color:#7f7;background:#7f71}
+.qr.qd{border-color:#667;background:#8881;color:#99a;filter:grayscale(1);opacity:.8}
 .qr small{color:#9fd}
 .qb{height:8px;background:#fff2;margin:5px 0;border-radius:4px;overflow:hidden}
 .qb i{display:block;height:100%;background:linear-gradient(90deg,#f0f,#0ff)}
+.jn{font-weight:700;font-size:15px}.jd{font-size:12px;opacity:.85;margin-top:2px}
+.jr{margin-top:5px;font-size:12px;color:#9fd;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.nw{margin-left:8px;padding:0 6px;border-radius:3px;background:#f0f;color:#fff;font-size:11px;animation:nwb 1s infinite}
+@keyframes nwb{50%{opacity:.35}}
+.bds{display:inline-flex;gap:3px}
+.bd{display:inline-block;width:11px;height:11px;background:#fff2;clip-path:polygon(0 15%,18% 0,100% 8%,92% 100%,10% 88%);opacity:.3}
+.bd.on{opacity:1;background:repeating-linear-gradient(135deg,#0ff 0 2px,#f0f 2px 4px,#fff 4px 5px);filter:drop-shadow(0 0 3px #0ff);animation:bdj .9s steps(2,end) infinite;animation-delay:calc(var(--i)*-.13s)}
+@keyframes bdj{0%{transform:translate(0,0)}25%{transform:translate(1px,-1px);filter:hue-rotate(90deg) drop-shadow(0 0 3px #f0f)}50%{transform:translate(-1px,0)}75%{transform:translate(0,1px);filter:hue-rotate(-60deg) drop-shadow(0 0 3px #0ff)}100%{transform:translate(0,0)}}
+#ov .plat{border:2px solid transparent!important;background:linear-gradient(#0b0620,#0b0620) padding-box,linear-gradient(120deg,#fff,#dff6ff,#ffe9fb,#fff,#e6fff4,#fff) border-box!important;background-size:100% 100%,300% 300%!important;animation:pearl 3s linear infinite;box-shadow:0 0 12px #fff9,0 0 26px #cfeaff66,inset 0 0 10px #fff3!important;color:#fff!important}
+@keyframes pearl{0%{background-position:0 0,0% 50%}100%{background-position:0 0,300% 50%}}
 </style>
 </head>
 <body>
@@ -322,7 +332,7 @@ function dmgEnemy(e,d,sx=pl.x,sz=pl.z,dot){
  if(!dot){let hx=e.x,hz=e.z;if(e.boss){const q=Math.hypot(sx-e.x,sz-e.z)||1;hx+=(sx-e.x)/q*3.6;hz+=(sz-e.z)/q*3.6}
   hitFX(hx,e.y,hz,d>=20?[1,.4,1]:[.6,1,1],d>=20?14:8,e.boss?2:1)} // 命中の火花
  const dx=e.x-sx,dz=e.z-sz,l=Math.hypot(dx,dz)||1;if(!e.boss&&!dot){e.x=Math.max(1,Math.min(W-2,e.x+dx/l*.6));e.z=Math.max(1,Math.min(D-2,e.z+dz/l*.6))}
- if(e.hp<=0){e.dead=1;lastK={x:e.x,z:e.z};hitFX(e.x,e.y,e.z,[1,.3,.8],e.boss?40:e.big?26:16,e.boss?3:1.5);FX.push({k:'boom',x:e.x,z:e.z,y:e.y-.3,r:e.big?3:1.6,t:0,l:.3,c:[.3,1,1]}); /* 撃破: デジタル崩壊 */const i=EN.indexOf(e);if(i>=0)EN.splice(i,1);kills+=e.big?2:1;SV.kills++;svDirty=1;blocks=Math.min(99,blocks+(e.big?5:2));if(job==3&&stock<30)stock++}
+ if(e.hp<=0){e.dead=1;lastK={x:e.x,z:e.z};hitFX(e.x,e.y,e.z,[1,.3,.8],e.boss?40:e.big?26:16,e.boss?3:1.5);FX.push({k:'boom',x:e.x,z:e.z,y:e.y-.3,r:e.big?3:1.6,t:0,l:.3,c:[.3,1,1]}); /* 撃破: デジタル崩壊 */const i=EN.indexOf(e);if(i>=0)EN.splice(i,1);kills+=e.big?2:1;SV.kills++;svDirty=1;if(e.fly)xc('fly',2);if(e.big&&!e.boss)xc('big',5);if(e.rng)xc('rng',8);blocks=Math.min(99,blocks+(e.big?5:2));if(job==3&&stock<30)stock++}
 }
 function bolt(){ // サモナーの通常攻撃: 遠距離の魔法
  const f=fwd();atk=JOBS[3].cd;if(mergeAB&&!aimEnemy(14))act(0);PR.push({x:pl.x+f[0]*.7,y:pl.y+1.45+f[1]*.7,z:pl.z+f[2]*.7,vx:f[0]*22,vy:f[1]*22,vz:f[2]*22,dmg:5,life:.85,g:0,s:.18,c:[.7,.5,1]})}
@@ -354,14 +364,14 @@ function web(){ // スキル1: 前方の扇状範囲にスロー+3秒間攻撃50
  if(state!='play'||job!=7||cdk>0)return;cdk=14;const f=fwd(),hl=Math.hypot(f[0],f[2])||1,fx=f[0]/hl,fz=f[2]/hl;
  FX.push({k:'web',x:pl.x,y:pl.y+1.2,z:pl.z,dx:fx,dz:fz,t:0,l:.6});
  for(const e of EN){if(e.boss)continue;const tx=e.x-pl.x,tz=e.z-pl.z,d=Math.hypot(tx,tz)||1;
-  if(d-rad(e)<14&&(tx*fx+tz*fz)/d>.64&&Math.abs(e.y-pl.y)<9){e.slow=3;e.atkdn=3}}}
+  if(d-rad(e)<14&&(tx*fx+tz*fz)/d>.64&&Math.abs(e.y-pl.y)<9){if(!(e.slow>0)&&!(e.atkdn>0))xc('stat',7);e.slow=3;e.atkdn=3}}}
 function venom(){ // スキル2: 紫の毒霧を前方へ。触れた敵は5秒間、毎秒5ダメージの毒(クール14秒)
  if(state!='play'||job!=7||cdh>0)return;cdh=14;const f=fwd();
  MS.push({x:pl.x+f[0]*.8,y:pl.y+1.3+f[1]*.8,z:pl.z+f[2]*.8,vx:f[0]*14,vy:f[1]*14,vz:f[2]*14,t:0,l:.9,h:[]})}
 function mistTick(dt){
  for(let i=MS.length-1;i>=0;i--){const m=MS[i];m.t+=dt;m.x+=m.vx*dt;m.y+=m.vy*dt;m.z+=m.vz*dt;
   for(const e of EN){if(m.h.includes(e))continue;
-   if(Math.hypot(m.x-e.x,m.y-e.y,m.z-e.z)<2.2+rad(e)){m.h.push(e);e.pz=5;e.pt=1;hitFX(e.x,e.y,e.z,[.7,.2,1],8,.8)}}
+   if(Math.hypot(m.x-e.x,m.y-e.y,m.z-e.z)<2.2+rad(e)){m.h.push(e);if(!(e.pz>0))xc('stat',7);e.pz=5;e.pt=1;hitFX(e.x,e.y,e.z,[.7,.2,1],8,.8)}}
   if(m.t>m.l)MS.splice(i,1)}} /* 霧は地形をすり抜ける */
 // ===== ベクトル･スラッシャー =====
 let DS=null,EG=[],LK=[]; // 突進 / エッジ(斬撃波) / ロックオン連鎖
@@ -449,7 +459,7 @@ function magic(){ // スキル2: 9秒間 ステージ全体の敵を完全停止
  if(state!='play'||job!=6||cdh>0||mg>0)return;cdh=25;mg=9;
  for(const e of EN){e.fz=1;e.mk=0} // ステージ全体の敵が対象
  toast('マジック! 敵をタップしてマーク',2)}
-function markE(e){if(mg>0&&e&&e.fz&&!e.boss){/* ボスはマーク不可 */e.mk=e.mk?0:1;hitFX(e.x,e.y,e.z,[1,.9,.3],8,1)}}
+function markE(e){if(mg>0&&e&&e.fz&&!e.boss){/* ボスはマーク不可 */e.mk=e.mk?0:1;if(e.mk)xc('mark',6);hitFX(e.x,e.y,e.z,[1,.9,.3],8,1)}}
 function markAim(){markE(aimEnemy(40))}
 function tapMark(px,py){ // 画面タップで一番近い敵をマーク
  const m=viewProj(),fl=innerHeight/2/Math.tan(.65);let b=null,bd=1e9;
@@ -485,7 +495,7 @@ function melee(){ // 近接ジョブの攻撃
  if(atk>0||job==5)return;if(job==3){bolt();return}const J=JOBS[job],f=fwd();let b=null,bd=99;
  for(const e of EN){const tx=e.x-pl.x,ty=e.y-pl.y-1.6,tz=e.z-pl.z,d=Math.hypot(tx,ty,tz);
   if(d-rad(e)<=J.reach&&(tx*f[0]+ty*f[1]+tz*f[2])/d>.8&&d<bd){bd=d;b=e}}
- atk=J.cd;FX.push({k:'swing',x:pl.x,y:pl.y+1.2,z:pl.z,dx:f[0]/(Math.hypot(f[0],f[2])||1),dz:f[2]/(Math.hypot(f[0],f[2])||1),t:0,l:.16,c:job==1?[1,.6,.2]:job==4?[.7,.7,1]:[.5,1,1]});if(!b&&mergeAB)act(0);if(b){dmgEnemy(b,pAtk()*(bf>0?2:1));if(job==0)sg=Math.min(100,sg+10);if(job==1){pgH++;if(pgH>=pgNeed()){pgH=0;pgA++}}}
+ atk=J.cd;FX.push({k:'swing',x:pl.x,y:pl.y+1.2,z:pl.z,dx:f[0]/(Math.hypot(f[0],f[2])||1),dz:f[2]/(Math.hypot(f[0],f[2])||1),t:0,l:.16,c:job==1?[1,.6,.2]:job==4?[.7,.7,1]:[.5,1,1]});if(!b&&mergeAB)act(0);if(b){dmgEnemy(b,pAtk()*(bf>0?2:1));if(job==0)sg=Math.min(100,sg+10);if(job==1){pgH++;xc('hits',1);if(pgH>=pgNeed()){pgH=0;pgA++}}}
 }
 function fire(){ // アーチャー: 溜め時間で攻撃力5→25、射程・弾速もアップ
  const ch=Math.min(1,chg/1.2);chg=0;if(atk>0)return;
@@ -499,7 +509,7 @@ function shock(){ // ガーディアン: 怒りゲージ満タンで衝撃波(30
 }
 const RN=['攻撃バフ','魔法','ノックバック','ヒール'];
 function special(){ // 剣士の必殺技: ゲージ100%で前方範囲に15ダメージ(必殺技ではゲージは溜まらない)
- if(state!='play'||job!=0||sg<100)return;sg=0;const f=fwd(),hl=Math.hypot(f[0],f[2])||1,fx=f[0]/hl,fz=f[2]/hl,m=bf>0?2:1;
+ if(state!='play'||job!=0||sg<100)return;sg=0;xc('charge',0);const f=fwd(),hl=Math.hypot(f[0],f[2])||1,fx=f[0]/hl,fz=f[2]/hl,m=bf>0?2:1;
  FX.push({k:'slash',x:pl.x,y:pl.y+1,z:pl.z,dx:fx,dz:fz,t:0,l:.25});
  for(const e of[...EN]){const tx=e.x-pl.x,tz=e.z-pl.z,al=tx*fx+tz*fz,pp=Math.abs(tx*fz-tz*fx);
   if(al>0&&al-rad(e)<=7&&pp<=3+rad(e)&&Math.abs(e.y-pl.y-1)<4)dmgEnemy(e,15*m)}}
@@ -539,10 +549,10 @@ function summonOne(){ // 最初の3体は戦士・魔法使い・ヒーラー(HP
  AL.push(mk(t,i<3?1:2))}
 function summonAll(){ // 召喚: ストックを一気に自分の周りへ(最大12体)
  if(state!='play'||job!=3||stock<=0)return;const n=Math.min(stock,12-mineN());if(n<=0)return;
- for(let i=0;i<n;i++)summonOne();stock-=n}
+ for(let i=0;i<n;i++)summonOne();stock-=n;xc('sum',3)}
 function fuse(){ // 合成: ストック2匹を消費して、火力・体力2倍の1匹
  if(state!='play'||job!=3||stock<2||mineN()>=12)return;stock-=2;sumN++;
- const a=mk(Math.random()<.5?0:1,2);a.hp=a.mhp=a.mhp*2;a.pw=2;AL.push(a)}
+ const a=mk(Math.random()<.5?0:1,2);a.hp=a.mhp=a.mhp*2;a.pw=2;AL.push(a);xc('fuse',3)}
 function mvTo(a,tx,tz,sp,dt){const dx=tx-a.x,dz=tz-a.z,d=Math.hypot(dx,dz);if(d>.05){const m=Math.min(d,sp*dt);a.x=Math.max(1,Math.min(W-2,a.x+dx/d*m));a.z=Math.max(1,Math.min(D-2,a.z+dz/d*m))}}
 function allyTick(dt){
  for(let ai=0;ai<AL.length;ai++){const a=AL[ai],an=ai*2.4,hx=pl.x+Math.cos(an)*2.6,hz=pl.z+Math.sin(an)*2.6;
@@ -568,7 +578,7 @@ function allyTick(dt){
  }
 }
 function jobTick(dt){
- if(!(job==6&&mg>0)){if(cdh>0)cdh-=dt;if(cdk>0)cdk-=dt}bombTick(dt);wireTick(dt);mistTick(dt);dashTick(dt);edgeTick(dt);lkTick(dt);if(mg>0){mg-=dt;if(mg<=0)endMagic()}if(bf>0)bf-=dt;if(skT>0)skT-=dt;if(hot>0){hot-=dt;pl.hp=Math.min(pl.mhp,pl.hp+hotR*dt)}if(kia>0)kia-=dt;if(tau>0)tau-=dt;
+ if(!(job==6&&mg>0)){if(cdh>0)cdh-=dt;if(cdk>0)cdk-=dt}bombTick(dt);wireTick(dt);mistTick(dt);dashTick(dt);edgeTick(dt);lkTick(dt);if(mg>0){mg-=dt;if(mg<=0)endMagic()}if(bf>0)bf-=dt;if(skT>0)skT-=dt;if(hot>0){hot-=dt;const h0=pl.hp;pl.hp=Math.min(pl.mhp,pl.hp+hotR*dt);if(job==4)xc('heal',4,pl.hp-h0)}if(kia>0)kia-=dt;if(tau>0)tau-=dt;
  if(hold&&job!=2)melee();
  if(hold&&job==2){chg=Math.min(1.2,chg+dt);cg.style.display='block';cgb.style.width=chg/1.2*100+'%';cgb.style.background='#ffd84a'}else if(hold&&job==8&&!DS){chg=Math.min(3.5,chg+dt);cg.style.display='block';cgb.style.width=chg/3.5*100+'%';cgb.style.background=chg>=3.5?'#f0f':'#ff8a3a'}else cg.style.display='none';
   if(AL.length)allyTick(dt);
@@ -714,11 +724,11 @@ function cpuTick(a,ai,ne,nd,dt){ // レイドのCPU(プレイヤー並みの強�
 }
 function modeTick(dt){
  if(toastT>0){toastT-=dt;if(toastT<=0)ts.style.display='none'}
- if(svDirty&&(chkT-=dt)<=0){chkT=1.5;const nw=checkQuests();if(nw.length)toast('★クエスト達成! '+nw.join(' / '),4);else saveSV()} // 撃破数などの進行を保存
+ if(svDirty&&(chkT-=dt)<=0){chkT=1.5;if(mode=='chaos')achChaos();const nw=checkQuests();if(nw.length)toast('★'+nw.join(' / '),4);else saveSV()} // 撃破数などの進行を保存
  if(mode=='chaos'&&mg<=0&&EN.length<15){chaosT-=dt;if(chaosT<=0){chaosHP++;spawnChaos(chaosHP);chaosT=.25}} // 常に15体: 倒されたら復活(体力+1ずつ)
  if(mg<=0){epTick(dt);mtTick(dt)}fortTick(dt);
  if(mode=='endless'){
-  if(!EN.length&&!waveT){waveT=3;const lx=lastK?lastK.x:pl.x,lz=lastK?lastK.z:pl.z;HI={x:lx,z:lz,y:TOP[(lx|0)+(lz|0)*W]+1.6};{SV.wv=Math.max(SV.wv,wave);svDirty=1;const nw=checkQuests();toast('WAVE '+wave+' クリア! 回復アイテム'+(nw.length?'\n★'+nw.join(' / '):''),nw.length?4:2.5)}}
+  if(!EN.length&&!waveT){waveT=3;const lx=lastK?lastK.x:pl.x,lz=lastK?lastK.z:pl.z;HI={x:lx,z:lz,y:TOP[(lx|0)+(lz|0)*W]+1.6};{SV.wv=Math.max(SV.wv,wave);svDirty=1;achWave();const nw=checkQuests();toast('WAVE '+wave+' クリア! 回復アイテム'+(nw.length?'\n★'+nw.join(' / '):''),nw.length?4:2.5)}}
   else if(waveT>0){waveT-=dt;if(waveT<=0){waveT=0;startWave()}}
  }
  if(HI&&Math.hypot(HI.x-pl.x,HI.z-pl.z)<1.8&&Math.abs(HI.y-pl.y-1)<2.5){pl.hp=Math.min(pl.mhp,pl.hp+50);HI=null;toast('+50 回復',1)}
@@ -791,7 +801,7 @@ $('hd').onclick=closeHide;
 // ===== 画面・状態 =====
 const HELP='左ドラッグ: 移動 / 右ドラッグ: 視点<br>攻撃ボタンで戦おう(ブロックは左下で壊す・置く)';
 function showOv(t,s,bs){$('ot').textContent=t;$('os').innerHTML=s;const c=$('bc');c.innerHTML='';
- for(const[l,f,sub]of bs){const b=document.createElement('button');b.textContent=l;if(sub)b.className=sub==2?'job':sub==3?'job locked':'sub';b.onclick=f;c.appendChild(b)}
+ for(const[l,f,sub,h]of bs){const b=document.createElement('button');if(h)b.innerHTML=h;else b.textContent=l;if(sub)b.className=typeof sub=='string'?sub:sub==2?'job':sub==3?'job locked':'sub';b.onclick=f;c.appendChild(b)}
  $('ov').style.display='flex';$('tb').classList.add('np');for(const k in T)delete T[k];js.style.display='none';jsId=null;$('dm').style.opacity=0;hold=0;chg=0;cg.style.display='none'}
 function start(){state='play';$('ov').style.display='none';$('tb').classList.remove('np')}
 let urlSeed;
@@ -804,7 +814,7 @@ const dq=()=>mode=='raid'?0:dif,dE=()=>Math.min(dq(),2); // dq: 敵の強さ補�
 //  id:識別子 / page:0=メインクエスト 1=ジョブクエスト / title / desc:条件の説明 / goal:目標値
 //  prog(S):現在値を返す関数(Sは保存データ) / req:先に達成が必要なクエストid / reward:{mode:'hunt'} や {job:3}
 const SAVE_KEY='vd_quest_v1';
-const newSV=()=>({modes:{crystal:1},jobs:{0:1},cl:{},wv:0,rw:0,rp:0,kills:0,ju:{},done:{}}); // 初期: 水晶集めとモノ･ブレードだけ
+const newSV=()=>({modes:{crystal:1},jobs:{0:1},cl:{},wv:0,rw:0,rp:0,kills:0,ju:{},done:{},jc:{},x:{},plat:{},nj:{},xa:{}}); // 初期: 水晶集めとモノ･ブレードだけ
 let SV=newSV(),svDirty=0,chkT=0,qFrom=null;
 try{const j=JSON.parse(localStorage.getItem(SAVE_KEY));if(j)SV=Object.assign(newSV(),j)}catch(e){}
 const saveSV=()=>{try{localStorage.setItem(SAVE_KEY,JSON.stringify(SV))}catch(e){}svDirty=0};
@@ -827,18 +837,45 @@ const QUESTS=[
  {id:'j5',page:1,title:'ウェーブの兆し',desc:'エンドレスで3ウェーブ達成',goal:3,prog:S=>S.wv,reward:{job:5}},
  {id:'j6',page:1,title:'レイダー',desc:'レイドバトルに1回参加',goal:1,prog:S=>S.rp,reward:{job:7}},
 ];
-const rewardText=q=>{const r=q.reward||{};return[r.mode?MN[r.mode]+'解禁':'',r.job!==undefined?JOBS[r.job].n+'解禁':''].filter(Boolean).join(' / ')||'なし'};
+// ===== ジョブごとのモード達成率(20項目)・熟練バッジ・エクストラクエスト =====
+// 達成率: 水晶集め/討伐/レイドの各難易度(4×3=12)+エンドレスWAVE1/5/10/15+カオス撃破15/50/85/150 = 20項目。そのジョブで達成した分だけ%が増える
+const MKEYS=[...['crystal','hunt','raid'].flatMap(m=>[0,1,2,3].map(d=>m+d)),'endless1','endless5','endless10','endless15','chaos15','chaos50','chaos85','chaos150'];
+const jobAchN=(S,j)=>Object.keys(S.jc[j]||{}).filter(k=>MKEYS.includes(k)).length;
+const jobRate=(S,j)=>Math.round(jobAchN(S,j)/MKEYS.length*100);
+function jobAch(j,key){SV.jc[j]=SV.jc[j]||{};if(!SV.jc[j][key]){SV.jc[j][key]=1;svDirty=1}}
+const achWave=()=>{for(const t of[1,5,10,15])if(wave>=t)jobAch(job,'endless'+t)};
+const achChaos=()=>{for(const t of[15,50,85,150])if(kills>=t)jobAch(job,'chaos'+t)};
+// エクストラクエスト: そのジョブの達成率が100%になるとジョブクエストに追加。達成するとジョブ選択の枠がプラチナ(パールホワイト)に輝く
+const EXTRA=[
+ {job:0,key:'charge',goal:500,title:'必殺の極み',desc:'チャージ技(必殺技)を500回使う'},
+ {job:1,key:'hits',goal:10000,title:'万打の拳',desc:'敵を10000回殴る'},
+ {job:2,key:'fly',goal:500,title:'撃墜王',desc:'飛行型の敵を500匹倒す'},
+ {job:3,keys:['sum','fuse'],goal:5000,title:'死霊の支配者',desc:'召喚と合成を5000回ずつ使う'},
+ {job:4,key:'heal',goal:6000,title:'不滅の盾',desc:'HPを6000回復する'},
+ {job:5,key:'big',goal:1000,title:'巨人殺し',desc:'デカ敵を1000体倒す'},
+ {job:6,key:'mark',goal:3000,title:'奇術の達人',desc:'マジックで敵を3000回マーキングする'},
+ {job:7,key:'stat',goal:4000,title:'毒蜘蛛の網',desc:'敵に状態異常を4000回付与する(重複不可)'},
+ {job:8,key:'rng',goal:1500,title:'遠隔狩り',desc:'遠隔型の敵を1500匹倒す'}];
+const xv=(S,e)=>e.keys?Math.min(S.x[e.keys[0]]||0,e.goal)+Math.min(S.x[e.keys[1]]||0,e.goal):Math.min(S.x[e.key]||0,e.goal);
+EXTRA.forEach(e=>QUESTS.push({id:'x'+e.job,page:1,extra:e.job,title:'['+JOBS[e.job].n+'] '+e.title,desc:e.desc,goal:e.keys?e.goal*2:e.goal,prog:S=>xv(S,e),vis:S=>jobRate(S,e.job)>=100,reward:{plat:e.job}}));
+const qVis=q=>!q.vis||q.vis(SV);
+function xc(key,j,n=1){if(job!=j||SV.done['x'+j]||jobRate(SV,j)<100)return;SV.x[key]=(SV.x[key]||0)+n;svDirty=1} // エクストラクエストの進行(追加後のみ数える)
+const rewardText=q=>{const r=q.reward||{};return[r.mode?MN[r.mode]+'解禁':'',r.job!==undefined?JOBS[r.job].n+'解禁':'',r.plat!==undefined?JOBS[r.plat].n+'の枠がプラチナに':''].filter(Boolean).join(' / ')||'なし'};
 const lockText=(kind,val)=>{const q=QUESTS.find(q=>q.reward&&q.reward[kind]===val);return q?'解禁条件: '+q.desc:'解禁条件: 未設定'};
 function checkQuests(){ // 達成したクエストの報酬(モード/ジョブ解禁)を反映して、達成した名前を返す
  const nw=[];let again=1;
- while(again){again=0;for(const q of QUESTS){if(SV.done[q.id])continue;if(q.req&&!q.req.every(i=>SV.done[i]))continue;
-  if(q.prog(SV)>=q.goal){SV.done[q.id]=1;const r=q.reward||{};if(r.mode)SV.modes[r.mode]=1;if(r.job!==undefined)SV.jobs[r.job]=1;nw.push(q.title+' → '+rewardText(q));again=1;svDirty=1}}}
+ while(again){again=0;for(const q of QUESTS){if(SV.done[q.id])continue;if(q.vis&&!q.vis(SV))continue;
+  if(q.vis&&!SV.xa[q.id]){SV.xa[q.id]=1;nw.push('エクストラクエスト追加! '+q.title);svDirty=1}
+  if(q.req&&!q.req.every(i=>SV.done[i]))continue;
+  if(q.prog(SV)>=q.goal){SV.done[q.id]=1;const r=q.reward||{};if(r.mode)SV.modes[r.mode]=1;if(r.job!==undefined){SV.jobs[r.job]=1;SV.nj[r.job]=1}if(r.plat!==undefined)SV.plat[r.plat]=1;nw.push(q.title+' → '+rewardText(q));again=1;svDirty=1}}}
  if(nw.length)saveSV();return nw}
 function recordEnd(s){ // 結果の記録(クリア実績・レイド勝利数)
+ if(mode=='chaos')achChaos();
+ if(s=='win'&&(mode=='crystal'||mode=='hunt'||mode=='raid'))jobAch(job,mode+dif); // ジョブごとの達成率
  if(s=='win'){if(mode=='crystal'||mode=='hunt')SV.cl[mode+dif]=1;if(mode=='raid'){SV.rw++;SV.cl['raid'+dif]=1}}
  svDirty=1;const nw=checkQuests();saveSV();return nw}
 function questMenu(pg=0){ // クエスト一覧(進捗バー付き)。ページ1=メイン、ページ2=ジョブ
- const qs=QUESTS.filter(q=>q.page==pg);
+ const qs=QUESTS.filter(q=>q.page==pg&&qVis(q)).map((q,i)=>[q,i]).sort((a,b)=>(!!SV.done[a[0].id]-!!SV.done[b[0].id])||a[1]-b[1]).map(x=>x[0]); // 達成済みは最後
  let h='<div class="ql"><div class="qh">'+(pg?'ジョブクエスト(武器の解放)':'メインクエスト(モードの解放)')+'</div>';
  for(const q of qs){const v=Math.min(q.goal,q.prog(SV)),dn=SV.done[q.id],av=!q.req||q.req.every(i=>SV.done[i]);
   h+=`<div class="qr${dn?' qd':''}"><b>${dn?'✔ ':av?'':'🔒 '}${q.title}</b><br>${q.desc}<div class="qb"><i style="width:${v/q.goal*100}%"></i></div><small>${v}/${q.goal}　報酬: ${rewardText(q)}</small></div>`}
@@ -848,10 +885,14 @@ function questMenu(pg=0){ // クエスト一覧(進捗バー付き)。ページ1
   ['戻る',qFrom||menu,1]])}
 const noDif=m=>m=='endless'||m=='chaos'; // 難易度選択のないモード // 難易度選択のないモード
 const play=(m,j=job)=>{if(!SV.modes[m]||!SV.jobs[j]||(!noDif(m)&&!diffOpen(m,dif)))return; // 未解禁は開始できない
+ delete SV.nj[j]; // NEWの印は、そのジョブを選んだら消える
  mode=m;job=j;if(noDif(m))dif=0;SV.ju[j]=1;if(m=='raid')SV.rp++;svDirty=1;checkQuests();newWorld(urlSeed);urlSeed=void 0;start()};
-function jobMenu(m,pg=0){ // ジョブ選択: 5人ずつページ分け
+const bdg=n=>{let o='';for(let i=0;i<10;i++)o+='<i class="bd'+(i<n?' on':'')+'" style="--i:'+i+'"></i>';return o}; // 熟練バッジ(最大10個)
+function jobMenu(m,pg=0){ // ジョブ選択: 5人ずつページ分け。達成率・熟練バッジ・NEW・プラチナ枠
  state='menu';const per=5,pages=Math.ceil(JOBS.length/per);
- showOv('ジョブを選ぶ ('+(pg+1)+'/'+pages+')',MN[m]+(noDif(m)?'':' / '+DN[dif]),[...JOBS.slice(pg*per,pg*per+per).map((J,i)=>{const k=pg*per+i;return SV.jobs[k]?[J.n+'\n'+J.d,()=>play(m,k),2]:['🔒 '+J.n+'\n'+lockText('job',k),()=>{},3]}),
+ showOv('ジョブを選ぶ ('+(pg+1)+'/'+pages+')',MN[m]+(noDif(m)?'':' / '+DN[dif]),[...JOBS.slice(pg*per,pg*per+per).map((J,i)=>{const k=pg*per+i;
+  return SV.jobs[k]?[J.n+'\n'+J.d,()=>play(m,k),'job'+(SV.plat[k]?' plat':''),`<div class="jn">${J.n}${SV.nj[k]?'<span class="nw">NEW</span>':''}</div><div class="jd">${J.d.replace(/\n/g,'<br>')}</div><div class="jr">達成率 ${jobRate(SV,k)}%<span class="bds">${bdg(Math.floor(jobAchN(SV,k)/2))}</span></div>`]
+   :['🔒 '+J.n+'\n'+lockText('job',k),()=>{},3]}),
   ...(pg<pages-1?[['次のページ ▶',()=>jobMenu(m,pg+1),1]]:[]),...(pg>0?[['◀ 前のページ',()=>jobMenu(m,pg-1),1]]:[]),['戻る',()=>noDif(m)?menu():difMenu(m),1]])}
 const stickLabel=()=>'操作スティック: '+(stick?'表示中':'非表示')+'(タップで切替)';
 const aimLabel=()=>'敵へのエイム補正: '+(aimOn?'ON':'OFF')+'(タップで切替)';
@@ -862,12 +903,12 @@ const MN={crystal:'水晶集めモード',hunt:'討伐モード',endless:'エン
 function menu(){state='menu';
  const D={crystal:'水晶集めモード\n水晶を10個集める(ハード15個・エキスパート20個)',hunt:'討伐モード\n敵を10体倒す(ハードは20体)',endless:'エンドレスモード\n終わりなきウェーブ。何ウェーブ耐える?',raid:'レイドバトル\n8人で特大ボスに挑む(難易度4段階)',chaos:'カオスモード\n常に15体の敵! 倒すと復活して体力+1'};
  const items=MODES.map(m=>SV.modes[m]?[D[m],()=>m=='crystal'||m=='hunt'||m=='raid'?difMenu(m):jobMenu(m),2]:['🔒 '+MN[m]+'\n'+lockText('mode',m),()=>{},3]);
- showOv('VOXEL DRIFT','モードを選んでください',[...items,['クエスト ('+QUESTS.filter(q=>SV.done[q.id]).length+'/'+QUESTS.length+')',()=>{qFrom=menu;questMenu(0)},1]])}
+ showOv('VOXEL DRIFT','モードを選んでください',[...items,['クエスト ('+QUESTS.filter(q=>qVis(q)&&SV.done[q.id]).length+'/'+QUESTS.filter(qVis).length+')',()=>{qFrom=menu;questMenu(0)},1]])}
 function difMenu(m){state='menu';
  const T0=m=='raid'?['イージー\nボスが動かない・体力と攻撃力が半分','ノーマル\n標準の強さ','ハード\nボスが高速で動き体力1.5倍・体力50%で2種同時攻撃','エキスパート\n体力2倍・攻撃力150・召喚2倍・最後は全攻撃']
   :['イージー\n初心者向け','ノーマル\n敵が増えて強くなる','ハード\n敵が大量で強い','エキスパート\nハードより敵がタフで速い'+(m=='crystal'?'・水晶20個で逃げる':'')];
  showOv('難易度を選ぶ',MN[m],[...T0.map((t,d)=>diffOpen(m,d)?[t,()=>{dif=d;jobMenu(m)},2]:['🔒 '+DN[d]+'\n解禁条件: '+DN[d-1]+'をクリア',()=>{},3]),['戻る',menu,1]])}
-function resultScreen(t,m,nw){showOv(t,m+(nw.length?'<br><br>★クエスト達成!<br>'+nw.join('<br>'):''),[['もう一度',()=>play(mode)],['ジョブ変更',()=>jobMenu(mode),1],['クエスト',()=>{qFrom=()=>resultScreen(t,m,nw);questMenu(0)},1],['メイン画面へ',menu,1]])}
+function resultScreen(t,m,nw){showOv(t,m+(nw.length?'<br><br>★クエスト<br>'+nw.join('<br>'):''),[['もう一度',()=>play(mode)],['ジョブ変更',()=>jobMenu(mode),1],['クエスト',()=>{qFrom=()=>resultScreen(t,m,nw);questMenu(0)},1],['メイン画面へ',menu,1]])}
 function end(s,t,m){state=s;resultScreen(t,m,recordEnd(s))}
 
 function hurt(a0){const a=kia>0?a0*.85:a0;pl.hp-=a;hitFX(pl.x,pl.y+1,pl.z,[1,.25,.45],6,1);if(job==4)rage=Math.min(100,rage+a0*2*(kia>0?2:1)); // きあいだめ中: 被ダメ15%軽減・怒りチャージ2倍
