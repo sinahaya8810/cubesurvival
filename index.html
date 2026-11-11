@@ -116,6 +116,15 @@ html,body{background:#05020f;color:#c8f4ff;font-family:"SF Mono",ui-monospace,Me
 @media (orientation:portrait){#hd img{width:100%;height:auto;flex:none}}
 #ov .locked{border-color:#556!important;color:#889!important;background:#fff1!important;box-shadow:none!important;text-shadow:none!important;filter:grayscale(1);opacity:.75}
 .ql{width:min(92vw,440px);text-align:left;margin:0 auto}
+.rk{display:flex;align-items:center;justify-content:center;gap:8px;margin:6px auto;font-size:13px;color:#cfe}.rk b{color:#7ff6ff;letter-spacing:.08em;text-shadow:0 0 6px #0ff8}.rk small{opacity:.8}
+.rkb{display:inline-block;width:min(36vw,150px);height:7px;border-radius:4px;background:#1c2638;overflow:hidden;box-shadow:inset 0 0 0 1px #3a4a66}.rkb i{display:block;height:100%;background:linear-gradient(90deg,#7ff6ff,#b9ffe0,#ff8af2);box-shadow:0 0 6px #7ff6ff}
+.xpl{margin:10px auto 4px;width:min(80vw,300px);font-size:13px;text-align:left}.xpl div{display:flex;justify-content:space-between;gap:12px;padding:1px 0}.xpl b{color:#b9ffe0}.xpl .xpt{border-top:1px solid #3a4a66;margin-top:4px;padding-top:4px;font-size:15px}.xpl .xpt b{color:#ffd84a}
+.bank{margin:4px auto;font-size:13px;color:#cfe}.bank b{color:#ffd84a;font-size:15px}
+.smsg{margin:4px auto 8px;padding:6px 10px;max-width:400px;border:1px solid #f88;color:#fbb;border-radius:6px;font-size:13px}.smsg.ok{border-color:#7ff6ff;color:#bff}
+.cpc{margin-left:8px;padding:0 6px;border:1px solid #ffd84a;border-radius:3px;color:#ffd84a;font-size:11px;font-weight:400}
+.tp{display:inline-flex;gap:2px;margin-left:6px;vertical-align:middle}.tp i{width:9px;height:5px;border-radius:1px;background:#fff2}.tp i.on{background:#7ff6ff;box-shadow:0 0 4px #7ff6ff}
+.qr.qx{border-color:#fff8;background:linear-gradient(120deg,#ffffff14,#7ff6ff14,#ff8af214);box-shadow:0 0 8px #cfeaff44}
+.rup{margin:6px 0;color:#ffd84a;font-weight:700;font-size:18px;letter-spacing:.06em;text-shadow:0 0 10px #ffd84a;animation:nwb .7s infinite}
 .qh{font-weight:700;color:#0ff;margin-bottom:6px}
 .qr{padding:6px 10px;margin:6px 0;border:1px solid #0ff5;border-radius:6px;background:#0ff1;font-size:13px}
 .qr.qd{border-color:#667;background:#8881;color:#99a;filter:grayscale(1);opacity:.8}
@@ -127,11 +136,32 @@ html,body{background:#05020f;color:#c8f4ff;font-family:"SF Mono",ui-monospace,Me
 .nw{margin-left:8px;padding:0 6px;border-radius:3px;background:#f0f;color:#fff;font-size:11px;animation:nwb 1s infinite}
 @keyframes nwb{50%{opacity:.35}}
 .bds{display:inline-flex;gap:3px}
+#ov button.lpb{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:none}#ov button.lp{background-image:linear-gradient(#8aa0c866,#8aa0c866);background-repeat:no-repeat;background-size:0 100%;animation:lpf .8s linear forwards}@keyframes lpf{to{background-size:100% 100%}}
+.gci{font:inherit;font-size:22px;width:min(60vw,220px);padding:8px 12px;text-align:center;border-radius:6px;border:2px solid #8aa0c8;background:#0b1220;color:#fff;margin:6px 0}
+.jcl{margin-top:4px;display:flex;flex-wrap:wrap;gap:3px 9px;font-size:10px;color:#9ab}.jg{display:inline-flex;align-items:center;gap:2px}.jc{font-style:normal;min-width:13px;padding:0 2px;text-align:center;border-radius:3px;border:1px solid #456;color:#678;line-height:13px}.jc.on{background:#2cf;border-color:#2cf;color:#012;font-weight:700}
 .bd{display:inline-block;width:11px;height:11px;background:#fff2;clip-path:polygon(0 15%,18% 0,100% 8%,92% 100%,10% 88%);opacity:.3}
 .bd.on{opacity:1;background:repeating-linear-gradient(135deg,#0ff 0 2px,#f0f 2px 4px,#fff 4px 5px);filter:drop-shadow(0 0 3px #0ff);animation:bdj .9s steps(2,end) infinite;animation-delay:calc(var(--i)*-.13s)}
 @keyframes bdj{0%{transform:translate(0,0)}25%{transform:translate(1px,-1px);filter:hue-rotate(90deg) drop-shadow(0 0 3px #f0f)}50%{transform:translate(-1px,0)}75%{transform:translate(0,1px);filter:hue-rotate(-60deg) drop-shadow(0 0 3px #0ff)}100%{transform:translate(0,0)}}
-#ov .plat{border:2px solid transparent!important;background:linear-gradient(#0b0620,#0b0620) padding-box,linear-gradient(120deg,#fff,#dff6ff,#ffe9fb,#fff,#e6fff4,#fff) border-box!important;background-size:100% 100%,300% 300%!important;animation:pearl 3s linear infinite;box-shadow:0 0 12px #fff9,0 0 26px #cfeaff66,inset 0 0 10px #fff3!important;color:#fff!important}
-@keyframes pearl{0%{background-position:0 0,0% 50%}100%{background-position:0 0,300% 50%}}
+/* プラチナ枠(エクストラクエスト達成): サイバーパンク風。パール色の流れる枠+ノイズ+走査線+光沢+グリッチ */
+#ov .plat{position:relative;overflow:hidden;isolation:isolate;border:2px solid transparent!important;color:#fff!important;
+ background-image:linear-gradient(#5ff,#5ff),linear-gradient(#5ff,#5ff),linear-gradient(#f5f,#f5f),linear-gradient(#f5f,#f5f),linear-gradient(180deg,#ffffff2e,#ffffff08 40%,transparent 55%),linear-gradient(135deg,#1b0d33,#071827 48%,#220a26),linear-gradient(120deg,#fff,#7ff6ff,#ff8af2,#fff,#b9ffe0,#c9b6ff,#fff)!important;
+ background-size:16px 2px,2px 16px,16px 2px,2px 16px,100% 100%,100% 100%,300% 300%!important;background-repeat:no-repeat!important;
+ background-origin:padding-box,padding-box,padding-box,padding-box,padding-box,padding-box,border-box!important;background-clip:padding-box,padding-box,padding-box,padding-box,padding-box,padding-box,border-box!important;
+ background-position:left 5px top 5px,left 5px top 5px,right 5px bottom 5px,right 5px bottom 5px,0 0,0 0,0% 50%;animation:pearl 3s linear infinite,pjit 5.3s infinite;
+ box-shadow:0 0 8px #fffb,0 0 20px #4ff8,0 0 34px #f4f5,inset 0 0 16px #fff2,inset 0 0 30px #0ff2!important}
+@keyframes pearl{0%{background-position:left 5px top 5px,left 5px top 5px,right 5px bottom 5px,right 5px bottom 5px,0 0,0 0,0% 50%}100%{background-position:left 5px top 5px,left 5px top 5px,right 5px bottom 5px,right 5px bottom 5px,0 0,0 0,300% 50%}}
+#ov .plat>*{position:relative;z-index:2}
+#ov .plat::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;mix-blend-mode:screen;opacity:.45;
+ background:repeating-linear-gradient(0deg,#ffffff14 0 1px,transparent 1px 3px),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1.6 0 0 0 -.7'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0/140px 140px;animation:pnz .4s steps(1) infinite}
+@keyframes pnz{0%{background-position:0 0,0 0}25%{background-position:0 1px,-47px 31px}50%{background-position:0 2px,63px -18px}75%{background-position:0 1px,-22px -57px}}
+#ov .plat::after{content:'';position:absolute;top:-20%;bottom:-20%;left:0;width:60%;z-index:3;pointer-events:none;
+ background:linear-gradient(105deg,transparent 20%,#ffffff26 42%,#ffffffb0 50%,#ffffff26 58%,transparent 80%);transform:translateX(-130%) skewX(-12deg);animation:pgl 3.4s ease-in-out infinite}
+@keyframes pgl{0%{transform:translateX(-130%) skewX(-12deg)}55%,100%{transform:translateX(230%) skewX(-12deg)}}
+@keyframes pjit{0%,88%,100%{transform:none;filter:none}89%{transform:translate(2px,-1px);filter:hue-rotate(70deg) saturate(1.6)}90.5%{transform:translate(-3px,1px) skewX(4deg);filter:hue-rotate(-50deg)}92%{transform:translate(1px,0);filter:none}93%{transform:translate(-1px,0) skewX(-2deg);filter:contrast(1.4) hue-rotate(120deg)}94%{transform:none;filter:none}}
+#ov .plat .jn{text-shadow:-1px 0 #f0f,1px 0 #0ff,0 0 10px #fffa;animation:pglt 3.7s infinite}
+#ov .plat .jn::after{content:'PLATINUM';display:inline-block;margin-left:8px;padding:1px 6px;font-size:9px;letter-spacing:.22em;font-weight:700;vertical-align:middle;color:#0b0620;background:linear-gradient(90deg,#7ff6ff,#fff,#ff8af2);box-shadow:0 0 8px #7ff6ffaa;clip-path:polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%)}
+@keyframes pglt{0%,90%,100%{text-shadow:-1px 0 #f0f,1px 0 #0ff,0 0 10px #fffa;transform:none}91%{text-shadow:-4px 0 #f0f,4px 0 #0ff,0 0 10px #fff;transform:translateX(2px)}93%{text-shadow:3px 0 #f0f,-3px 0 #0ff;transform:translateX(-2px) skewX(-8deg)}95%{text-shadow:-1px 0 #f0f,1px 0 #0ff;transform:none}}
+#ov .plat .jd{color:#e8fbff;opacity:.92}#ov .plat .jr{color:#aff}
 </style>
 </head>
 <body>
@@ -249,14 +279,14 @@ function newWorld(s){
  s=s??Math.floor(Math.random()*1e6);
  gen(s);
  pl.x=W/2;pl.z=mode=='raid'?D/2+16:mode=='endless'?D/2+9:D/2;pl.y=TOP[(pl.x|0)+(pl.z|0)*W]+2;pl.vy=0;pl.mhp=JOBS[job].hp;pl.hp=pl.mhp;AL=[];PR=[];FX=[];DC=null;cdk=0;ncr=dif>=3?20:dif==2?15:10;pgA=2;pgH=0;cap=3;rage=0;cdh=0;chg=0;hold=0;sumT=0;healerLost=false;wave=0;waveT=0;HI=null;lastK=null;BOSS=null;toastT=0;MT=[];EP=[];FT=null;zg=0;hov=0;BM=[];mg=0;WR=null;MS=[];chaosHP=1;chaosT=0;DS=null;EG=[];LK=[];sg=0;bf=0;hot=0;skT=0;rsk=Math.floor(Math.random()*4);ts.style.display='none';stock=job==3?3:0;sumN=0;kia=0;tau=0;hotR=10; /* サモナーは最初のストック3 */
- blocks=20;got=0;time=0;spawnT=0;kills=0;
+ blocks=20;got=0;time=0;spawnT=0;kills=0;runXP=0;XO=[];
  if(mode=='crystal')for(let i=0;i<ncr;i++){const[x,z]=rpos(10);CR.push({x,y:TOP[(x|0)+(z|0)*W]+1.8,z})}
  if(mode=='crystal'){for(let i=0,n=Math.round(5*DIF[dq()].cnt);i<n;i++)spawnEnemy();addKinds(1+dE(),1+(dE()>>1))}else if(mode=='hunt'){for(let i=0,n=Math.round(8*DIF[dq()].cnt);i<n;i++)spawnEnemy();for(let i=0,n=Math.round(2*DIF[dq()].cnt);i<n;i++)spawnEnemy(1);addKinds(2+dE(),1+dE())}else if(mode=='endless'){mkFort();pl.x=FT.x;pl.z=Math.min(D-3,FT.z+4);pl.y=Math.max(TOP[(pl.x|0)+(pl.z|0)*W],TOP[(pl.x-1|0)+(pl.z|0)*W],TOP[(pl.x|0)+(pl.z-1|0)*W],TOP[(pl.x-1|0)+(pl.z-1|0)*W])+2;startWave()}else if(mode=='chaos')chaosInit();else raidInit();
 }
 
 // ===== プレイヤー =====
 const pl={x:0,y:0,z:0,vy:0,hp:100,mhp:100,g:0};
-let yaw=0,pitch=0,sel=0,blocks=20,got=0,time=0,spawnT=0,state='menu',kills=0,jump=0,atk=0,mode='crystal',job=0,pgA=2,pgH=0,cap=3,rage=0,cdh=0,chg=0,hold=0,sumT=0,healerLost=false,AL=[],PR=[],FX=[],DC=null,cdk=0,ncr=10,wave=0,waveT=0,HI=null,lastK=null,toastT=0,BOSS=null,MT=[],EP=[],FT=null,sg=0,rsk=0,bf=0,hot=0,lastSk=0,skT=0,stock=0,sumN=0,kia=0,tau=0,hotR=10;
+let yaw=0,pitch=0,sel=0,blocks=20,got=0,time=0,spawnT=0,state='menu',kills=0,jump=0,atk=0,mode='crystal',job=0,pgA=2,pgH=0,cap=3,rage=0,cdh=0,chg=0,hold=0,sumT=0,healerLost=false,AL=[],PR=[],FX=[],DC=null,cdk=0,ncr=10,wave=0,waveT=0,HI=null,lastK=null,toastT=0,BOSS=null,MT=[],EP=[],FT=null,sg=0,rsk=0,bf=0,hot=0,lastSk=0,skT=0,stock=0,sumN=0,kia=0,tau=0,hotR=10,runXP=0,XO=[];
 const hit=(px,py,pz)=>{const r=.3;
  for(let x=Math.floor(px-r);x<=Math.floor(px+r);x++)for(let y=Math.floor(py);y<=Math.floor(py+1.7);y++)for(let z=Math.floor(pz-r);z<=Math.floor(pz+r);z++)if(solid(x,y,z))return 1;return 0};
 
@@ -325,14 +355,24 @@ function atkFX(e,tg,ty,ux,uz){ // 敵の攻撃エフェクト: 突進+当たっ�
  if(tg!==pl)hitFX(tg.x,py,tg.z,[1,.25,.5],e.big?14:8,1);
  if(e.big)FX.push({k:'boom',x:e.x,z:e.z,y:e.y-.8,r:3,t:0,l:.3,c:[.8,.3,1]});
  if(e.fly)FX.push({k:'lz',x1:e.x,y1:e.y-.2,z1:e.z,x2:tg.x,y2:py,z2:tg.z,t:0,l:.18})}
+let EHP=null; // 弾の当たった位置(ボスの目の判定用)
+const eyeP=e=>{const fa=e.fa||0;return[e.x+Math.sin(fa)*3,e.y+.7,e.z+Math.cos(fa)*3]};
+function eyeHit(e,sx,sz){ // レイドボスの1つ目に当たったか
+ const E=eyeP(e),fx=Math.sin(e.fa||0),fz=Math.cos(e.fa||0);
+ if(EHP)return Math.hypot(EHP[0]-E[0],EHP[1]-E[1],EHP[2]-E[2])<1.7;
+ const ox=sx-e.x,oz=sz-e.z,ol=Math.hypot(ox,oz)||1;if((ox*fx+oz*fz)/ol<.35)return false; // 目の正面側からの攻撃だけ
+ if(sx===pl.x&&sz===pl.z){const f=fwd(),hx=E[0]-pl.x,hy=E[1]-pl.y-1.6,hz=E[2]-pl.z,t=hx*f[0]+hy*f[1]+hz*f[2];if(t<=0)return false; // 視線(エイム)が目を向いているか
+  return Math.hypot(hx-f[0]*t,hy-f[1]*t,hz-f[2]*t)<1.6}
+ return (ox*fx+oz*fz)/ol>.9} // 味方CPU: ほぼ真正面から
 function dmgEnemy(e,d,sx=pl.x,sz=pl.z,dot){
  if(e.dead||e.inv)return;
+ if(GM)d*=10;let eh=0;if(e.boss&&!dot&&eyeHit(e,sx,sz)){eh=1;d*=3} // 目は弱点: 3倍ダメージ
  if(e.exp&&e.boss&&!e.fin&&e.hp-d<=1){e.hp=1;e.fin=1;e.inv=1;bossFinal(e);return} // エキスパート: 残りHP1で無敵+全攻撃
  e.hp-=d;if(!dot)e.hit=.15;
  if(!dot){let hx=e.x,hz=e.z;if(e.boss){const q=Math.hypot(sx-e.x,sz-e.z)||1;hx+=(sx-e.x)/q*3.6;hz+=(sz-e.z)/q*3.6}
-  hitFX(hx,e.y,hz,d>=20?[1,.4,1]:[.6,1,1],d>=20?14:8,e.boss?2:1)} // 命中の火花
+  if(eh){const E=eyeP(e);hitFX(E[0],E[1],E[2],[1,1,.3],22,2.4);FX.push({k:'boom',x:E[0],z:E[2],y:E[1],r:2.2,t:0,l:.25,c:[1,1,.3]})}else hitFX(hx,e.y,hz,d>=20?[1,.4,1]:[.6,1,1],d>=20?14:8,e.boss?2:1)} // 命中の火花(目は黄色)
  const dx=e.x-sx,dz=e.z-sz,l=Math.hypot(dx,dz)||1;if(!e.boss&&!dot){e.x=Math.max(1,Math.min(W-2,e.x+dx/l*.6));e.z=Math.max(1,Math.min(D-2,e.z+dz/l*.6))}
- if(e.hp<=0){e.dead=1;lastK={x:e.x,z:e.z};hitFX(e.x,e.y,e.z,[1,.3,.8],e.boss?40:e.big?26:16,e.boss?3:1.5);FX.push({k:'boom',x:e.x,z:e.z,y:e.y-.3,r:e.big?3:1.6,t:0,l:.3,c:[.3,1,1]}); /* 撃破: デジタル崩壊 */const i=EN.indexOf(e);if(i>=0)EN.splice(i,1);kills+=e.big?2:1;SV.kills++;svDirty=1;if(e.fly)xc('fly',2);if(e.big&&!e.boss)xc('big',5);if(e.rng)xc('rng',8);blocks=Math.min(99,blocks+(e.big?5:2));if(job==3&&stock<30)stock++}
+ if(e.hp<=0){e.dead=1;lastK={x:e.x,z:e.z};hitFX(e.x,e.y,e.z,[1,.3,.8],e.boss?40:e.big?26:16,e.boss?3:1.5);FX.push({k:'boom',x:e.x,z:e.z,y:e.y-.3,r:e.big?3:1.6,t:0,l:.3,c:[.3,1,1]}); /* 撃破: デジタル崩壊 */const i=EN.indexOf(e);if(i>=0)EN.splice(i,1);kills+=e.big?2:1;SV.kills++;runXP+=e.boss?500*(dif+1):e.big?8:e.rng?4:e.fly?3:2;if(e.big&&!e.boss)SV.bk++;jsA('k');if(e.big&&!e.boss)jsA('b');if(e.fly)jsA('f');if(e.rng)jsA('r');dropOrbs(e);svDirty=1;if(e.fly)xc('fly',2);if(e.big&&!e.boss)xc('big',5);if(e.rng)xc('rng',8);blocks=Math.min(99,blocks+(e.big?5:2));if(job==3&&stock<30)stock++}
 }
 function bolt(){ // サモナーの通常攻撃: 遠距離の魔法
  const f=fwd();atk=JOBS[3].cd;if(mergeAB&&!aimEnemy(14))act(0);PR.push({x:pl.x+f[0]*.7,y:pl.y+1.45+f[1]*.7,z:pl.z+f[2]*.7,vx:f[0]*22,vy:f[1]*22,vz:f[2]*22,dmg:5,life:.85,g:0,s:.18,c:[.7,.5,1]})}
@@ -587,7 +627,7 @@ function jobTick(dt){
   for(let k=0;k<n&&!gone;k++){
    p.vy-=p.g*h;p.x+=p.vx*h;p.y+=p.vy*h;p.z+=p.vz*h;
    if(!p.ns&&solid(Math.floor(p.x),Math.floor(p.y),Math.floor(p.z))){gone=1;break}
-   for(const e of EN)if(Math.hypot(p.x-e.x,p.y-e.y,p.z-e.z)<(e.boss?3.4:e.big?1.1:.65)){if(p.pi){if(p.h.includes(e))continue;p.h.push(e);dmgEnemy(e,p.dmg,p.x-p.vx,p.z-p.vz);break}dmgEnemy(e,p.dmg,p.x-p.vx,p.z-p.vz);gone=1;break}
+   for(const e of EN)if(Math.hypot(p.x-e.x,p.y-e.y,p.z-e.z)<(e.boss?3.4:e.big?1.1:.65)){EHP=[p.x,p.y,p.z];if(p.pi){if(p.h.includes(e)){EHP=null;continue}p.h.push(e);dmgEnemy(e,p.dmg,p.x-p.vx,p.z-p.vz);EHP=null;break}dmgEnemy(e,p.dmg,p.x-p.vx,p.z-p.vz);EHP=null;gone=1;break}
   }
   p.life-=dt;if(gone||p.life<=0)PR.splice(i,1)}
  for(let i=FX.length-1;i>=0;i--){FX[i].t+=dt;if(FX[i].t>(FX[i].l||.4))FX.splice(i,1)}
@@ -596,6 +636,16 @@ function jobTick(dt){
 // ===== エンドレス / レイド =====
 const JC=[[.15,.65,1],[1,.5,.15],[1,1,.3],[.8,.3,1],[.5,.6,.9]],SKIN=[.7,.95,1];
 function toast(m,t=2){ts.textContent=m;ts.style.display='block';toastT=t}
+// 経験値の光の粒: 倒した敵から飛び散って落ち、少しするとプレイヤーに吸い込まれる
+function dropOrbs(e){const n=e.boss?30:e.big?7:4;for(let i=0;i<n&&XO.length<220;i++){const a=Math.random()*6.283,v=1.5+Math.random()*2.5;
+ XO.push({x:e.x,y:e.y,z:e.z,vx:Math.cos(a)*v,vy:3+Math.random()*3.5,vz:Math.sin(a)*v,t:-Math.random()*.15,ph:Math.random()*6})}}
+function orbTick(dt){
+ for(let i=XO.length-1;i>=0;i--){const o=XO[i];o.t+=dt;
+  if(o.t<.7){o.vy-=16*dt;o.x+=o.vx*dt;o.y+=o.vy*dt;o.z+=o.vz*dt;o.vx*=.97;o.vz*=.97;
+   const g=(TOP[(clmp(o.x,0,W-1)|0)+(clmp(o.z,0,D-1)|0)*W]||0)+1.15;if(o.y<g){o.y=g;o.vy=Math.abs(o.vy)*.35}}
+  else{const dx=pl.x-o.x,dy=pl.y+1-o.y,dz=pl.z-o.z,d=Math.hypot(dx,dy,dz)||1,sp=Math.min(45,5+(o.t-.7)*40);
+   if(d<.6+sp*dt){XO.splice(i,1);if(Math.random()<.35)hitFX(pl.x,pl.y+1,pl.z,[.7,1,.5],3,.6);continue}
+   o.x+=dx/d*sp*dt;o.y+=dy/d*sp*dt;o.z+=dz/d*sp*dt}}}
 let chaosHP=1,chaosT=0;
 function spawnChaos(hp){ // カオス: 小型を中心に、ドローン・遠距離型も混ざる
  const q=Math.random();
@@ -651,6 +701,7 @@ function bossTick(e,dt){
  if(ph>e.bph){e.bph=ph;toast((ph==2?'ボスが激怒! 火力・速度アップ':'ボス最終形態!')+(X.sim[ph-1]>1?' '+X.sim[ph-1]+'種類同時攻撃':''),2.5)}
  let nt=null,nd2=1e9;for(const o of partyT()){const d=Math.hypot(o.x-e.x,o.z-e.z);if(d<nd2){nd2=d;nt=o}}
  const sp=ph>=2?X.mv2:X.mv;
+ if(nt){const ta=Math.atan2(nt.x-e.x,nt.z-e.z);let df=ta-(e.fa||0);df=Math.atan2(Math.sin(df),Math.cos(df));e.fa=(e.fa||0)+Math.max(-.9*dt,Math.min(.9*dt,df))} // 1つ目がゆっくり近い相手の方を向く
  if(sp>0&&nt&&nd2>5){const v=sp*dt;e.x=clmp(e.x+(nt.x-e.x)/nd2*v,6,W-6);e.z=clmp(e.z+(nt.z-e.z)/nd2*v,6,D-6)} // 歩いて近づく
  if(X.exp&&ph>=2&&!e.fin){e.tp-=dt;if(e.tp<=0){e.tp=10;hitFX(e.x,e.y,e.z,[1,.4,1],20,2); // エキスパート: 体力50%以下で10秒おきにランダムテレポート
   e.x=8+Math.random()*(W-16);e.z=8+Math.random()*(D-16);hitFX(e.x,e.y,e.z,[1,.4,1],20,2);toast('ボスがテレポート!',1.2)}}
@@ -726,9 +777,9 @@ function modeTick(dt){
  if(toastT>0){toastT-=dt;if(toastT<=0)ts.style.display='none'}
  if(svDirty&&(chkT-=dt)<=0){chkT=1.5;if(mode=='chaos')achChaos();const nw=checkQuests();if(nw.length)toast('★'+nw.join(' / '),4);else saveSV()} // 撃破数などの進行を保存
  if(mode=='chaos'&&mg<=0&&EN.length<15){chaosT-=dt;if(chaosT<=0){chaosHP++;spawnChaos(chaosHP);chaosT=.25}} // 常に15体: 倒されたら復活(体力+1ずつ)
- if(mg<=0){epTick(dt);mtTick(dt)}fortTick(dt);
+ if(mg<=0){epTick(dt);mtTick(dt)}fortTick(dt);orbTick(dt);
  if(mode=='endless'){
-  if(!EN.length&&!waveT){waveT=3;const lx=lastK?lastK.x:pl.x,lz=lastK?lastK.z:pl.z;HI={x:lx,z:lz,y:TOP[(lx|0)+(lz|0)*W]+1.6};{SV.wv=Math.max(SV.wv,wave);svDirty=1;achWave();const nw=checkQuests();toast('WAVE '+wave+' クリア! 回復アイテム'+(nw.length?'\n★'+nw.join(' / '):''),nw.length?4:2.5)}}
+  if(!EN.length&&!waveT){waveT=3;const lx=lastK?lastK.x:pl.x,lz=lastK?lastK.z:pl.z;HI={x:lx,z:lz,y:TOP[(lx|0)+(lz|0)*W]+1.6};{if(FT)FT.hp=Math.min(FT.mhp,FT.hp+50);SV.wv=Math.max(SV.wv,wave);svDirty=1;achWave();jsM('ew',wave);const nw=checkQuests();toast('WAVE '+wave+' クリア! 砦+50回復・回復アイテム'+(nw.length?'\n★'+nw.join(' / '):''),nw.length?4:2.5)}}
   else if(waveT>0){waveT-=dt;if(waveT<=0){waveT=0;startWave()}}
  }
  if(HI&&Math.hypot(HI.x-pl.x,HI.z-pl.z)<1.8&&Math.abs(HI.y-pl.y-1)<2.5){pl.hp=Math.min(pl.mhp,pl.hp+50);HI=null;toast('+50 回復',1)}
@@ -791,7 +842,7 @@ bt('bs',()=>sel=(sel+1)%5);
 bt('bx',()=>pauseMenu());
 bt('bz',()=>openHide());
 bt('bA',()=>{hold=1;chg=0;if(job==5)plasma();if(job==6&&mg>0)markAim()},()=>{if(hold&&job==2)fire();if(hold&&job==8)slashRelease();hold=0;chg=0});
-bt('bk',()=>{job==4?(rage>=100?shock():kiai()):job==1?decoy():job==2?beam():job==0?special():job==3?summonAll():job==5?zeroG():job==6?megaBomb():job==7?web():job==8&&edge()});bt('bh',()=>job==0?randSkill():job==3?fuse():job==4?taunt():job==5?dive():job==6?magic():job==7?venom():job==8&&lockOn());
+bt('bk',()=>skU(0,()=>{job==4?(rage>=100?shock():kiai()):job==1?decoy():job==2?beam():job==0?special():job==3?summonAll():job==5?zeroG():job==6?megaBomb():job==7?web():job==8&&edge()}));bt('bh',()=>skU(1,()=>job==0?randSkill():job==3?fuse():job==4?taunt():job==5?dive():job==6?magic():job==7?venom():job==8&&lockOn()));
 
 // ===== 資料ボタン: 画面を切り替えて写真を全画面表示(ゲーム画面を隠す)。タップで戻る =====
 let hid=0;
@@ -801,7 +852,17 @@ $('hd').onclick=closeHide;
 // ===== 画面・状態 =====
 const HELP='左ドラッグ: 移動 / 右ドラッグ: 視点<br>攻撃ボタンで戦おう(ブロックは左下で壊す・置く)';
 function showOv(t,s,bs){$('ot').textContent=t;$('os').innerHTML=s;const c=$('bc');c.innerHTML='';
- for(const[l,f,sub,h]of bs){const b=document.createElement('button');if(h)b.innerHTML=h;else b.textContent=l;if(sub)b.className=typeof sub=='string'?sub:sub==2?'job':sub==3?'job locked':'sub';b.onclick=f;c.appendChild(b)}
+ for(const[l,f,sub,h,lp]of bs){const b=document.createElement('button');if(h)b.innerHTML=h;else b.textContent=l;if(sub)b.className=typeof sub=='string'?sub:sub==2?'job':sub==3?'job locked':'sub';b.onclick=f;
+  if(lp){let tm=0,fired=0,sx=0,sy=0;b.classList.add('lpb');b.oncontextmenu=e=>e.preventDefault(); // 長押し(0.8秒)で別の動作。押している間ゲージがたまる
+   const cl=()=>{if(tm){clearTimeout(tm);tm=0}b.classList.remove('lp')};
+   const dn=(x,y)=>{fired=0;cl();sx=x;sy=y;void b.offsetWidth;b.classList.add('lp');tm=setTimeout(()=>{tm=0;fired=1;b.classList.remove('lp');lp()},800)};
+   b.addEventListener('touchstart',e=>{const t=e.touches[0];dn(t.clientX,t.clientY)},{passive:true});
+   b.addEventListener('touchmove',e=>{const t=e.touches[0];if(Math.hypot(t.clientX-sx,t.clientY-sy)>25)cl()},{passive:true});
+   b.addEventListener('touchend',e=>{if(fired)e.preventDefault();cl()},{passive:false}); // 長押しが成立したら、離したときのタップを無効に
+   b.addEventListener('touchcancel',cl);
+   b.addEventListener('mousedown',e=>{if(!tm&&!fired)dn(e.clientX,e.clientY)});b.addEventListener('mouseup',()=>{if(tm)cl()});b.addEventListener('mouseleave',()=>{if(tm)cl()});
+   b.onclick=e=>{if(fired){fired=0;e.preventDefault();return}f()}}
+  c.appendChild(b)}
  $('ov').style.display='flex';$('tb').classList.add('np');for(const k in T)delete T[k];js.style.display='none';jsId=null;$('dm').style.opacity=0;hold=0;chg=0;cg.style.display='none'}
 function start(){state='play';$('ov').style.display='none';$('tb').classList.remove('np')}
 let urlSeed;
@@ -814,38 +875,75 @@ const dq=()=>mode=='raid'?0:dif,dE=()=>Math.min(dq(),2); // dq: 敵の強さ補�
 //  id:識別子 / page:0=メインクエスト 1=ジョブクエスト / title / desc:条件の説明 / goal:目標値
 //  prog(S):現在値を返す関数(Sは保存データ) / req:先に達成が必要なクエストid / reward:{mode:'hunt'} や {job:3}
 const SAVE_KEY='vd_quest_v1';
-const newSV=()=>({modes:{crystal:1},jobs:{0:1},cl:{},wv:0,rw:0,rp:0,kills:0,ju:{},done:{},jc:{},x:{},plat:{},nj:{},xa:{}}); // 初期: 水晶集めとモノ･ブレードだけ
+const newSV=()=>({modes:{crystal:1},jobs:{0:1},cl:{},wv:0,rw:0,rp:0,kills:0,ju:{},done:{},jc:{},x:{},plat:{},nj:{},xa:{},xp:0,pc:0,tt:0,cb:0,bk:0,bank:0,cap:0,js:{}}); // xp=ランクに使ったXP bank=所持XP cap=XPカプセル js=ジョブごとの記録 // 初期: 水晶集めとモノ･ブレードだけ
 let SV=newSV(),svDirty=0,chkT=0,qFrom=null;
 try{const j=JSON.parse(localStorage.getItem(SAVE_KEY));if(j)SV=Object.assign(newSV(),j)}catch(e){}
+try{for(const k in SV.jc){const c=SV.jc[k];if(c&&(c.endless5||c.endless15))c.endless3=1}}catch(e){} // 旧データ: WAVE5達成済みならWAVE3も達成扱い
 const saveSV=()=>{try{localStorage.setItem(SAVE_KEY,JSON.stringify(SV))}catch(e){}svDirty=0};
 addEventListener('pagehide',()=>{if(svDirty)saveSV()});
 const MODES=['crystal','hunt','endless','raid','chaos'];
 const diffOpen=(m,d)=>d==0||!!SV.cl[m+(d-1)]; // 難易度は1つ下をクリアすると解禁
+// ===== ユーザーランク(XP) =====
+// 次のランクまでのXP: 100 + 50×(ランク-1) + 2×(ランク-1)² … ランクが上がるほど必要XPが増える(上限なし)
+const rkCost=L=>100+50*(L-1)+2*(L-1)*(L-1);
+function rankOf(xp){let L=1,r=Math.max(0,Math.floor(xp||0));while(r>=rkCost(L)){r-=rkCost(L);L++}return{lv:L,cur:r,need:rkCost(L)}}
+const rankHTML=()=>{const r=rankOf(SV.xp);return`<div class="rk"><b>RANK ${r.lv}</b><span class="rkb"><i style="width:${r.cur/r.need*100}%"></i></span><small>${r.cur} / ${r.need} XP</small></div>`};
+const nJob=S=>JOBS.filter((_,j)=>S.jobs[j]).length,nUse=S=>JOBS.filter((_,j)=>S.ju[j]).length,nPlat=S=>JOBS.filter((_,j)=>S.plat[j]).length;
+const maxRate=S=>Math.max(0,...JOBS.map((_,j)=>jobRate(S,j)));
 const QUESTS=[
- // --- メインクエスト(モード解放) ---
- {id:'m1',page:0,title:'水晶の探求者',desc:'水晶集め(ノーマル)をクリア',goal:1,prog:S=>S.cl.crystal1?1:0,reward:{mode:'hunt'}},
- {id:'m2',page:0,title:'討伐の覚醒',desc:'討伐モード(ノーマル)をクリア',goal:1,prog:S=>S.cl.hunt1?1:0,reward:{mode:'endless'}},
- {id:'m3',page:0,title:'終わりなき戦い',desc:'エンドレスで5ウェーブ達成',goal:5,prog:S=>S.wv,reward:{mode:'raid'}},
- {id:'m4',page:0,title:'砦の守護者',desc:'エンドレスで10ウェーブクリア',goal:10,prog:S=>S.wv,reward:{mode:'chaos'}},
- {id:'m5',page:0,title:'レイド制覇',desc:'レイドバトルに通算5回勝利',goal:5,prog:S=>S.rw,reward:{job:6}},
- {id:'m6',page:0,title:'最終クエスト',desc:'上のメインクエストを全て達成',goal:5,prog:S=>['m1','m2','m3','m4','m5'].filter(i=>S.done[i]).length,req:['m1','m2','m3','m4','m5'],reward:{job:8}},
- // --- ジョブクエスト(武器解放。最初はモノ･ブレードだけ) ---
- {id:'j1',page:1,title:'初陣',desc:'敵を累計50体倒す',goal:50,prog:S=>S.kills,reward:{job:1}},
- {id:'j2',page:1,title:'最初の水晶',desc:'水晶集め(イージー)をクリア',goal:1,prog:S=>S.cl.crystal0?1:0,reward:{job:2}},
- {id:'j3',page:1,title:'百戦錬磨',desc:'敵を累計200体倒す',goal:200,prog:S=>S.kills,reward:{job:3}},
- {id:'j4',page:1,title:'討伐者',desc:'討伐モードをクリア(難易度は問わない)',goal:1,prog:S=>(S.cl.hunt0||S.cl.hunt1||S.cl.hunt2)?1:0,reward:{job:4}},
- {id:'j5',page:1,title:'ウェーブの兆し',desc:'エンドレスで3ウェーブ達成',goal:3,prog:S=>S.wv,reward:{job:5}},
- {id:'j6',page:1,title:'レイダー',desc:'レイドバトルに1回参加',goal:1,prog:S=>S.rp,reward:{job:7}},
+ // --- メインクエスト(簡単→難しい順。モード解放+XP) ---
+ {id:'a1',page:0,title:'はじめの一歩',desc:'ゲームを1回プレイする',goal:1,prog:S=>S.pc,xp:30},
+ {id:'a2',page:0,title:'初撃破',desc:'敵を累計10体倒す',goal:10,prog:S=>S.kills,xp:40},
+ {id:'m1',page:0,title:'水晶の探求者',desc:'水晶集め(ノーマル)をクリア',goal:1,prog:S=>S.cl.crystal1?1:0,reward:{mode:'hunt'},xp:100},
+ {id:'a3',page:0,title:'肩慣らし',desc:'ゲームを3回プレイする',goal:3,prog:S=>S.pc,xp:50},
+ {id:'a4',page:0,title:'ランクアップ',desc:'ユーザーランク2になる',goal:2,prog:S=>rankOf(S.xp).lv,xp:50},
+ {id:'m2',page:0,title:'討伐の覚醒',desc:'討伐モード(ノーマル)をクリア',goal:1,prog:S=>S.cl.hunt1?1:0,reward:{mode:'endless'},xp:150},
+ {id:'a5',page:0,title:'水晶ハンター',desc:'水晶集め(ハード)をクリア',goal:1,prog:S=>S.cl.crystal2?1:0,xp:200},
+ {id:'a6',page:0,title:'討伐のプロ',desc:'討伐モード(ハード)をクリア',goal:1,prog:S=>S.cl.hunt2?1:0,xp:220},
+ {id:'m3',page:0,title:'終わりなき戦い',desc:'エンドレスで5ウェーブ達成',goal:5,prog:S=>S.wv,reward:{mode:'raid'},xp:200},
+ {id:'a7',page:0,title:'仲間を増やせ',desc:'ジョブを3つ解禁する',goal:3,prog:S=>nJob(S),xp:150},
+ {id:'a8',page:0,title:'レイドデビュー',desc:'レイドバトル(イージー)に勝利',goal:1,prog:S=>S.cl.raid0?1:0,xp:200},
+ {id:'m4',page:0,title:'砦の守護者',desc:'エンドレスで10ウェーブクリア',goal:10,prog:S=>S.wv,reward:{mode:'chaos'},xp:300},
+ {id:'a9',page:0,title:'カオスの入口',desc:'カオスモード1回で50体撃破',goal:50,prog:S=>S.cb,xp:250},
+ {id:'a10',page:0,title:'殲滅者',desc:'敵を累計1000体倒す',goal:1000,prog:S=>S.kills,xp:300},
+ {id:'a11',page:0,title:'デカ敵ハンター',desc:'デカ敵を累計50体倒す',goal:50,prog:S=>S.bk,xp:250},
+ {id:'a12',page:0,title:'いろいろ試す',desc:'3種類のジョブでプレイする',goal:3,prog:S=>nUse(S),xp:200},
+ {id:'a13',page:0,title:'水晶の支配者',desc:'水晶集め(エキスパート)をクリア',goal:1,prog:S=>S.cl.crystal3?1:0,xp:500},
+ {id:'a14',page:0,title:'討伐の鬼',desc:'討伐モード(エキスパート)をクリア',goal:1,prog:S=>S.cl.hunt3?1:0,xp:500},
+ {id:'a15',page:0,title:'レイド中級者',desc:'レイドバトル(ノーマル)に勝利',goal:1,prog:S=>S.cl.raid1?1:0,xp:400},
+ {id:'a16',page:0,title:'鉄壁の砦',desc:'エンドレスで15ウェーブ達成',goal:15,prog:S=>S.wv,xp:500},
+ {id:'a17',page:0,title:'ランク10',desc:'ユーザーランク10になる',goal:10,prog:S=>rankOf(S.xp).lv,xp:400},
+ {id:'a18',page:0,title:'熟練の証',desc:'どれかのジョブで達成率50%',goal:50,prog:S=>maxRate(S),xp:500},
+ {id:'a19',page:0,title:'カオスの住人',desc:'カオスモード1回で100体撃破',goal:100,prog:S=>S.cb,xp:600},
+ {id:'a20',page:0,title:'レイド上級者',desc:'レイドバトル(ハード)に勝利',goal:1,prog:S=>S.cl.raid2?1:0,xp:800},
+ {id:'a21',page:0,title:'ジョブコレクター',desc:'全てのジョブを解禁する',goal:JOBS.length,prog:S=>nJob(S),xp:800},
+ {id:'a22',page:0,title:'オールラウンダー',desc:'全てのジョブでプレイする',goal:JOBS.length,prog:S=>nUse(S),xp:800},
+ {id:'a23',page:0,title:'不落の城',desc:'エンドレスで20ウェーブ達成',goal:20,prog:S=>S.wv,xp:900},
+ {id:'a24',page:0,title:'一騎当千',desc:'敵を累計5000体倒す',goal:5000,prog:S=>S.kills,xp:900},
+ {id:'a25',page:0,title:'巨人の天敵',desc:'デカ敵を累計500体倒す',goal:500,prog:S=>S.bk,xp:1000},
+ {id:'a26',page:0,title:'歴戦のレイダー',desc:'レイドバトルに通算10回勝利',goal:10,prog:S=>S.rw,xp:1000},
+ {id:'a27',page:0,title:'やりこみ',desc:'累計プレイ時間60分',goal:60,prog:S=>Math.floor(S.tt/60),xp:800},
+ {id:'a28',page:0,title:'ランク25',desc:'ユーザーランク25になる',goal:25,prog:S=>rankOf(S.xp).lv,xp:1500},
+ {id:'a29',page:0,title:'レイドの覇者',desc:'レイドバトル(エキスパート)に勝利',goal:1,prog:S=>S.cl.raid3?1:0,xp:2000},
+ {id:'a30',page:0,title:'混沌の王',desc:'カオスモード1回で150体撃破',goal:150,prog:S=>S.cb,xp:2000},
+ {id:'a31',page:0,title:'無限の守り手',desc:'エンドレスで30ウェーブ達成',goal:30,prog:S=>S.wv,xp:2500},
+ {id:'a32',page:0,title:'完全制覇',desc:'どれかのジョブで達成率100%',goal:100,prog:S=>maxRate(S),xp:2500},
+ {id:'a33',page:0,title:'プラチナの輝き',desc:'どれかのジョブの枠をプラチナにする',goal:1,prog:S=>nPlat(S),xp:3000},
+ {id:'a34',page:0,title:'万の屍',desc:'敵を累計10000体倒す',goal:10000,prog:S=>S.kills,xp:3000},
+ {id:'a35',page:0,title:'ランク50',desc:'ユーザーランク50になる',goal:50,prog:S=>rankOf(S.xp).lv,xp:5000},
+ {id:'a36',page:0,title:'レイドの伝説',desc:'レイドバトルに通算50回勝利',goal:50,prog:S=>S.rw,xp:5000},
+ {id:'a37',page:0,title:'白金の頂',desc:'全てのジョブの枠をプラチナにする',goal:JOBS.length,prog:S=>nPlat(S),xp:10000},
+ {id:'a38',page:0,title:'ランク100',desc:'ユーザーランク100になる',goal:100,prog:S=>rankOf(S.xp).lv,xp:20000},
 ];
 // ===== ジョブごとのモード達成率(20項目)・熟練バッジ・エクストラクエスト =====
-// 達成率: 水晶集め/討伐/レイドの各難易度(4×3=12)+エンドレスWAVE1/5/10/15+カオス撃破15/50/85/150 = 20項目。そのジョブで達成した分だけ%が増える
-const MKEYS=[...['crystal','hunt','raid'].flatMap(m=>[0,1,2,3].map(d=>m+d)),'endless1','endless5','endless10','endless15','chaos15','chaos50','chaos85','chaos150'];
+// 達成率: 水晶集め/討伐/レイドの各難易度(4×3=12)+エンドレスWAVE1/3/5/10+カオス撃破15/50/85/150 = 20項目。そのジョブで達成した分だけ%が増える
+const MKEYS=[...['crystal','hunt','raid'].flatMap(m=>[0,1,2,3].map(d=>m+d)),'endless1','endless3','endless5','endless10','chaos15','chaos50','chaos85','chaos150'];
 const jobAchN=(S,j)=>Object.keys(S.jc[j]||{}).filter(k=>MKEYS.includes(k)).length;
 const jobRate=(S,j)=>Math.round(jobAchN(S,j)/MKEYS.length*100);
 function jobAch(j,key){SV.jc[j]=SV.jc[j]||{};if(!SV.jc[j][key]){SV.jc[j][key]=1;svDirty=1}}
-const achWave=()=>{for(const t of[1,5,10,15])if(wave>=t)jobAch(job,'endless'+t)};
-const achChaos=()=>{for(const t of[15,50,85,150])if(kills>=t)jobAch(job,'chaos'+t)};
-// エクストラクエスト: そのジョブの達成率が100%になるとジョブクエストに追加。達成するとジョブ選択の枠がプラチナ(パールホワイト)に輝く
+const achWave=()=>{for(const t of[1,3,5,10])if(wave>=t)jobAch(job,'endless'+t)};
+const achChaos=()=>{for(const t of[15,50,85,150])if(kills>=t)jobAch(job,'chaos'+t);jsM('ck',kills)};
+// エクストラクエスト: 最初からジョブクエストに表示。達成するとジョブ選択の枠がプラチナ(パールホワイト)に輝く
 const EXTRA=[
  {job:0,key:'charge',goal:500,title:'必殺の極み',desc:'チャージ技(必殺技)を500回使う'},
  {job:1,key:'hits',goal:10000,title:'万打の拳',desc:'敵を10000回殴る'},
@@ -857,42 +955,117 @@ const EXTRA=[
  {job:7,key:'stat',goal:4000,title:'毒蜘蛛の網',desc:'敵に状態異常を4000回付与する(重複不可)'},
  {job:8,key:'rng',goal:1500,title:'遠隔狩り',desc:'遠隔型の敵を1500匹倒す'}];
 const xv=(S,e)=>e.keys?Math.min(S.x[e.keys[0]]||0,e.goal)+Math.min(S.x[e.keys[1]]||0,e.goal):Math.min(S.x[e.key]||0,e.goal);
-EXTRA.forEach(e=>QUESTS.push({id:'x'+e.job,page:1,extra:e.job,title:'['+JOBS[e.job].n+'] '+e.title,desc:e.desc,goal:e.keys?e.goal*2:e.goal,prog:S=>xv(S,e),vis:S=>jobRate(S,e.job)>=100,reward:{plat:e.job}}));
+// ===== ジョブクエスト: ジョブごとに段階(I, II, III…)つきのクエスト。★エクストラの最終段階でプラチナ枠 =====
+const SKN=[['必殺技','ランダムスキル'],['身代わり',null],['ビーム',null],['召喚','合成'],['きあいだめ・衝撃波','挑発'],['ゼロG','ダイブ'],['メガボム','マジック'],['ウェブ','ヴェノム'],['エッジ','ロックオン']];
+const RM=['I','II','III','IV','V','VI','VII','VIII'],jsv=(S,j,k)=>(S.js[j]||{})[k]||0;
+function jobChains(j){const n=JOBS[j].n,sk=SKN[j]||[],e=EXTRA.find(x=>x.job==j),C=[];
+ const add=(key,title,df,goals,xps,prog,plat)=>C.push({key,title,df,goals,xps,prog,plat});
+ if(e){const G=e.keys?e.goal*2:e.goal;add('x','★'+e.title,g=>e.desc.replace(/\d+/,String(e.keys?g/2:g))+'(最終段階でプラチナ枠)',[.02,.1,.25,.5,.75,1].map(f=>Math.round(G*f)),[100,200,400,800,1500,4000],S=>xv(S,e),1)}
+ add('k','撃破',g=>`${n}で敵を${g}体倒す`,[10,50,150,400,1000,2500,5000],[20,50,100,200,400,800,1500],S=>jsv(S,j,'k'));
+ add('b','デカ敵狩り',g=>`${n}でデカ敵を${g}体倒す`,[3,15,50,150,400,1000],[30,60,150,300,600,1200],S=>jsv(S,j,'b'));
+ add('f','撃墜',g=>`${n}で飛行型の敵を${g}体倒す`,[5,25,80,200,500],[30,60,150,300,700],S=>jsv(S,j,'f'));
+ add('r','遠距離狩り',g=>`${n}で遠距離型の敵を${g}体倒す`,[5,25,80,200,500],[30,60,150,300,700],S=>jsv(S,j,'r'));
+ if(sk[0])add('s0',sk[0],g=>`${n}で「${sk[0]}」を${g}回使う`,[5,25,100,300,800,2000],[20,50,120,250,500,1000],S=>jsv(S,j,'s0'));
+ if(sk[1])add('s1',sk[1],g=>`${n}で「${sk[1]}」を${g}回使う`,[5,25,100,300,800,2000],[20,50,120,250,500,1000],S=>jsv(S,j,'s1'));
+ add('w','クリア',g=>`${n}で水晶集め・討伐・レイドを通算${g}回クリア`,[1,5,15,40,100],[50,120,300,700,1500],S=>jsv(S,j,'w'));
+ add('rb','レイド勝利',g=>`${n}でレイドバトルに${g}回勝利`,[1,3,10,25],[150,350,800,1600],S=>jsv(S,j,'rb'));
+ add('ew','砦の番人',g=>`${n}でエンドレス${g}ウェーブ到達`,[3,5,10,15,20,30],[30,60,150,300,600,1200],S=>jsv(S,j,'ew'));
+ add('ck','カオス',g=>`${n}でカオスモード1回で${g}体撃破`,[15,50,85,150,250],[30,80,200,500,1000],S=>jsv(S,j,'ck'));
+ add('rt','熟練',g=>`${n}の達成率を${g}%にする`,[25,50,75,100],[100,250,600,1500],S=>jobRate(S,j));
+ return C}
+JOBS.forEach((J,j)=>jobChains(j).forEach(c=>c.goals.forEach((g,t)=>QUESTS.push({id:'q'+j+c.key+t,page:1,job:j,ch:c.key,ct:c.title,tier:t,nt:c.goals.length,title:c.title+' '+RM[t],desc:c.df(g),goal:g,prog:c.prog,xp:c.xps[t],reward:c.plat&&t==c.goals.length-1?{plat:j}:undefined}))));
+JOBS.forEach((_,j)=>{if(SV.done['x'+j])for(let t=0;t<6;t++)SV.done['q'+j+'x'+t]=1}); // 旧エクストラ達成済みのデータを引き継ぐ
+function jsA(k,n=1){const o=SV.js[job]=SV.js[job]||{};o[k]=(o[k]||0)+n;svDirty=1} // ジョブごとの記録(加算)
+function jsM(k,v){const o=SV.js[job]=SV.js[job]||{};if(v>(o[k]||0)){o[k]=v;svDirty=1}} // ジョブごとの記録(最高値)
+function skU(sl,fn){ // スキルを使えたか(クールダウン等の変化)を見て回数を数える
+ const b=[cdk,cdh,sg,stock,rage,mg,kia,tau,zg,!!DS];fn();
+ if(state=='play'&&(cdk>b[0]||cdh>b[1]||sg<b[2]||stock<b[3]||rage<b[4]||mg>b[5]||kia>b[6]||tau>b[7]||zg!=b[8]||(!!DS&&!b[9])))jsA('s'+sl)}
 const qVis=q=>!q.vis||q.vis(SV);
-function xc(key,j,n=1){if(job!=j||SV.done['x'+j]||jobRate(SV,j)<100)return;SV.x[key]=(SV.x[key]||0)+n;svDirty=1} // エクストラクエストの進行(追加後のみ数える)
-const rewardText=q=>{const r=q.reward||{};return[r.mode?MN[r.mode]+'解禁':'',r.job!==undefined?JOBS[r.job].n+'解禁':'',r.plat!==undefined?JOBS[r.plat].n+'の枠がプラチナに':''].filter(Boolean).join(' / ')||'なし'};
-const lockText=(kind,val)=>{const q=QUESTS.find(q=>q.reward&&q.reward[kind]===val);return q?'解禁条件: '+q.desc:'解禁条件: 未設定'};
+function xc(key,j,n=1){if(job!=j||SV.done['q'+j+'x5'])return;SV.x[key]=(SV.x[key]||0)+n;svDirty=1} // エクストラクエストの進行
+const rewardText=q=>{const r=q.reward||{};return[r.mode?MN[r.mode]+'解禁':'',r.job!==undefined?JOBS[r.job].n+'解禁':'',r.plat!==undefined?JOBS[r.plat].n+'の枠がプラチナに':'',q.xp?'+'+q.xp+' XP':''].filter(Boolean).join(' / ')||'なし'};
+const lockText=(kind,val)=>{if(kind=='job')return'解放: ショップでXPカプセル×'+unlockCost()+'を使う';const q=QUESTS.find(q=>q.reward&&q.reward[kind]===val);return q?'解禁条件: '+q.desc:'解禁条件: 未設定'};
 function checkQuests(){ // 達成したクエストの報酬(モード/ジョブ解禁)を反映して、達成した名前を返す
  const nw=[];let again=1;
  while(again){again=0;for(const q of QUESTS){if(SV.done[q.id])continue;if(q.vis&&!q.vis(SV))continue;
   if(q.vis&&!SV.xa[q.id]){SV.xa[q.id]=1;nw.push('エクストラクエスト追加! '+q.title);svDirty=1}
   if(q.req&&!q.req.every(i=>SV.done[i]))continue;
-  if(q.prog(SV)>=q.goal){SV.done[q.id]=1;const r=q.reward||{};if(r.mode)SV.modes[r.mode]=1;if(r.job!==undefined){SV.jobs[r.job]=1;SV.nj[r.job]=1}if(r.plat!==undefined)SV.plat[r.plat]=1;nw.push(q.title+' → '+rewardText(q));again=1;svDirty=1}}}
+  if(q.prog(SV)>=q.goal){SV.done[q.id]=1;const r=q.reward||{};if(r.mode)SV.modes[r.mode]=1;if(r.job!==undefined){SV.jobs[r.job]=1;SV.nj[r.job]=1}if(r.plat!==undefined)SV.plat[r.plat]=1;SV.bank+=q.xp||0;nw.push((q.job!==undefined?'['+JOBS[q.job].n+'] ':'')+q.title+' → '+rewardText(q));again=1;svDirty=1}}}
  if(nw.length)saveSV();return nw}
 function recordEnd(s){ // 結果の記録(クリア実績・レイド勝利数)
  if(mode=='chaos')achChaos();
- if(s=='win'&&(mode=='crystal'||mode=='hunt'||mode=='raid'))jobAch(job,mode+dif); // ジョブごとの達成率
+ if(s=='win'&&(mode=='crystal'||mode=='hunt'||mode=='raid')){jobAch(job,mode+dif);jsA('w');if(mode=='raid')jsA('rb')} // ジョブごとの達成率
  if(s=='win'){if(mode=='crystal'||mode=='hunt')SV.cl[mode+dif]=1;if(mode=='raid'){SV.rw++;SV.cl['raid'+dif]=1}}
  svDirty=1;const nw=checkQuests();saveSV();return nw}
+let GM=false;try{GM=localStorage.getItem('vd_gm')=='1'}catch(e){} // GMモード(無敵・与ダメージ10倍)
+function setGM(v){GM=v;try{localStorage.setItem('vd_gm',v?'1':'0')}catch(e){}}
+function codeIn(pg,msg){state='menu'; // 「進行をリセット」の長押し: ゲーム内のコード入力画面。「8」でGMメニュー
+ showOv('コード入力',(msg?'<div style="color:#f88;margin-bottom:6px">'+msg+'</div>':'')+'<input id="gc" class="gci" type="text" inputmode="numeric" autocomplete="off" placeholder="コード">',[
+  ['決定',()=>{const v=($('gc').value||'').trim().replace(/[０-９]/g,d=>String.fromCharCode(d.charCodeAt(0)-65248));
+   if(v=='8')gmMenu(pg);else codeIn(pg,v?'コードが違います':'コードを入力してください')}],
+  ['戻る',()=>questMenu(pg),1]]);
+ const g=$('gc');g.onkeydown=e=>{e.stopPropagation();if(e.key=='Enter')$('bc').firstChild.click()};g.onkeyup=g.onkeypress=e=>e.stopPropagation();setTimeout(()=>{try{g.focus()}catch(e){}},50)}
+function allQuests(){ // 全クエスト達成(報酬も全部反映)
+ for(const q of QUESTS){if(!SV.done[q.id])SV.bank+=q.xp||0;SV.done[q.id]=1;const r=q.reward||{};if(r.mode)SV.modes[r.mode]=1;if(r.job!==undefined)SV.jobs[r.job]=1;if(r.plat!==undefined)SV.plat[r.plat]=1}
+ for(const m of MODES)SV.modes[m]=1;JOBS.forEach((_,j)=>SV.jobs[j]=1);saveSV()}
+function gmMenu(pg,msg){state='menu';
+ showOv('GMメニュー',msg||'GM専用の設定です',[
+  ['クエストを全て達成する\n全モード・全ジョブ・プラチナ枠も解禁',()=>{allQuests();gmMenu(pg,'✔ 全クエストを達成しました')},1],
+  ['所持XP +10000',()=>{SV.bank+=10000;saveSV();gmMenu(pg,'✔ 所持XP +10000')},1],['XPカプセル +10',()=>{SV.cap+=10;saveSV();gmMenu(pg,'✔ XPカプセル +10')},1],
+  ['全難易度を解禁する',()=>{for(const m of['crystal','hunt','raid'])for(let d=0;d<4;d++)SV.cl[m+d]=1;saveSV();gmMenu(pg,'✔ 全難易度を解禁しました')},1],
+  ['GMモード: '+(GM?'ON':'OFF')+'(タップで切替)\n無敵(自分と砦)・与ダメージ10倍',()=>{setGM(!GM);gmMenu(pg)},1],
+  ['進行をリセット',()=>{if(confirm('クエストの進行データを全て消します。よろしいですか?')){SV=newSV();saveSV();gmMenu(pg,'✔ 進行をリセットしました')}},1],
+  ['戻る',()=>questMenu(pg),1]])}
+const resetBtn=pg=>['進行をリセット',()=>{if(confirm('クエストの進行データを全て消します。よろしいですか?')){SV=newSV();saveSV();questMenu(pg)}},1,undefined,()=>codeIn(pg)]; // 長押しでコード入力
+function jqList(){state='menu'; // ジョブクエスト: まずジョブを選ぶ
+ showOv('クエスト (2/2)',rankHTML()+'ジョブクエスト: ジョブを選んでください',[...JOBS.map((J,j)=>{const qs=QUESTS.filter(q=>q.job===j),d=qs.filter(q=>SV.done[q.id]).length;
+  return[J.n,()=>jqMenu(j),'job'+(SV.plat[j]?' plat':''),`<div class="jn">${SV.jobs[j]?'':'🔒 '}${J.n}</div><div class="jr">達成 ${d} / ${qs.length}</div><div class="qb"><i style="width:${d/qs.length*100}%"></i></div>`]}),
+  ['◀ メインクエスト',()=>questMenu(0),1],resetBtn(1),['戻る',qFrom||menu,1]])}
+function jqMenu(j){state='menu';const chs={},od=[];for(const q of QUESTS)if(q.job===j){if(!chs[q.ch]){chs[q.ch]=[];od.push(q.ch)}chs[q.ch].push(q)}
+ const L=od.map(k=>chs[k]).sort((a,b)=>(a.every(q=>SV.done[q.id])-b.every(q=>SV.done[q.id])));
+ let h='<div class="ql">'+(SV.jobs[j]?'':'<div class="qh" style="color:#f8a">🔒 このジョブはまだ解放されていません(ショップで解放)</div>');
+ for(const c of L){const cur=c.find(q=>!SV.done[q.id]),dn=c.filter(q=>SV.done[q.id]).length,px='<span class="tp">'+c.map(q=>'<i class="'+(SV.done[q.id]?'on':'')+'"></i>').join('')+'</span>';
+  if(!cur){h+=`<div class="qr qd"><b>✔ ${c[0].ct}</b> ${px}<br>全${c.length}段階クリア</div>`;continue}
+  const v=Math.min(cur.goal,cur.prog(SV));
+  h+=`<div class="qr${cur.ch=='x'?' qx':''}"><b>${cur.title}</b> ${px}<br>${cur.desc}<div class="qb"><i style="width:${v/cur.goal*100}%"></i></div><small>${v}/${cur.goal}　報酬: ${rewardText(cur)}</small></div>`}
+ showOv(JOBS[j].n+' のクエスト',h+'</div>',[['◀ ジョブ一覧',jqList,1],['戻る',qFrom||menu,1]])}
 function questMenu(pg=0){ // クエスト一覧(進捗バー付き)。ページ1=メイン、ページ2=ジョブ
+ if(pg==1)return jqList();
  const qs=QUESTS.filter(q=>q.page==pg&&qVis(q)).map((q,i)=>[q,i]).sort((a,b)=>(!!SV.done[a[0].id]-!!SV.done[b[0].id])||a[1]-b[1]).map(x=>x[0]); // 達成済みは最後
- let h='<div class="ql"><div class="qh">'+(pg?'ジョブクエスト(武器の解放)':'メインクエスト(モードの解放)')+'</div>';
+ let h='<div class="ql">'+rankHTML()+'<div class="qh">'+(pg?'ジョブクエスト(ジョブの解放)':'メインクエスト(モードの解放・XP)')+'</div>';
  for(const q of qs){const v=Math.min(q.goal,q.prog(SV)),dn=SV.done[q.id],av=!q.req||q.req.every(i=>SV.done[i]);
   h+=`<div class="qr${dn?' qd':''}"><b>${dn?'✔ ':av?'':'🔒 '}${q.title}</b><br>${q.desc}<div class="qb"><i style="width:${v/q.goal*100}%"></i></div><small>${v}/${q.goal}　報酬: ${rewardText(q)}</small></div>`}
  h+='</div>';
  showOv('クエスト ('+(pg+1)+'/2)',h,[[pg?'◀ メインクエスト':'ジョブクエスト ▶',()=>questMenu(1-pg),1],
-  ['進行をリセット',()=>{if(confirm('クエストの進行データを全て消します。よろしいですか?')){SV=newSV();saveSV();questMenu(pg)}},1],
-  ['戻る',qFrom||menu,1]])}
+  resetBtn(pg),['戻る',qFrom||menu,1]])}
+// ===== ショップ: 所持XPをユーザーランクに使う / XPカプセル(100XP)を買う / カプセルでジョブを解放 =====
+const unlockCost=()=>{const n=nJob(SV)+1;return n<=3?1:n<=5?2:3}; // 2〜3つ目×1、4〜5つ目×2、6つ目以降×3
+let shopFrom=null;
+function shopMsg(m,ok){shopMenu('<div class="smsg'+(ok?' ok':'')+'">'+m+'</div>')}
+function invest(a){a=Math.min(a,SV.bank);if(a<=0)return shopMsg('所持XPがありません');const r0=rankOf(SV.xp).lv;SV.bank-=a;SV.xp+=a;svDirty=1;const nw=checkQuests();saveSV();const r1=rankOf(SV.xp).lv;
+ shopMsg((r1>r0?'RANK UP! '+r0+' → '+r1:'ランクに '+a+' XP 使いました')+(nw.length?'<br>★'+nw.join('<br>★'):''),1)}
+function buyCap(n){const c=100*n;if(SV.bank<c)return shopMsg('所持XPが足りません(あと '+(c-SV.bank)+' XP)');SV.bank-=c;SV.cap+=n;saveSV();shopMsg('XPカプセルを '+n+' 個買いました',1)}
+function unlockJob(k){const c=unlockCost();if(SV.jobs[k])return;if(SV.cap<c)return shopMsg('XPカプセルが足りません(あと ×'+(c-SV.cap)+')');
+ SV.cap-=c;SV.jobs[k]=1;SV.nj[k]=1;svDirty=1;const nw=checkQuests();saveSV();shopMsg(JOBS[k].n+' を解放しました!'+(nw.length?'<br>★'+nw.join('<br>★'):''),1)}
+function shopMenu(msg=''){state='menu';const r=rankOf(SV.xp),nd=r.need-r.cur,c=unlockCost(),lk=JOBS.map((J,k)=>k).filter(k=>!SV.jobs[k]);
+ const h=msg+`<div class="bank">所持XP <b>${SV.bank}</b>　XPカプセル <b>×${SV.cap}</b></div>`+rankHTML()+(lk.length?`<div class="qh" style="margin-top:8px">ジョブ解放: XPカプセル×${c}</div>`:'');
+ showOv('ショップ',h,[
+  [SV.bank>=nd?`ランクに使う: 次のランクまで (${nd} XP)`:`ランクに使う: 全部 (${SV.bank} XP)`,()=>invest(nd),1],
+  [`ランクに使う: 全部 (${SV.bank} XP)`,()=>invest(SV.bank),1],
+  ['XPカプセルを買う ×1 (100 XP)',()=>buyCap(1),1],['XPカプセルを買う ×5 (500 XP)',()=>buyCap(5),1],
+  ...lk.map(k=>[JOBS[k].n,()=>unlockJob(k),'job'+(SV.cap>=c?'':' locked'),`<div class="jn">${SV.cap>=c?'🔓':'🔒'} ${JOBS[k].n}<span class="cpc">カプセル×${c}</span></div><div class="jd">${JOBS[k].d.replace(/\n/g,'<br>')}</div>`]),
+  ['戻る',shopFrom||menu,1]])}
 const noDif=m=>m=='endless'||m=='chaos'; // 難易度選択のないモード // 難易度選択のないモード
 const play=(m,j=job)=>{if(!SV.modes[m]||!SV.jobs[j]||(!noDif(m)&&!diffOpen(m,dif)))return; // 未解禁は開始できない
  delete SV.nj[j]; // NEWの印は、そのジョブを選んだら消える
- mode=m;job=j;if(noDif(m))dif=0;SV.ju[j]=1;if(m=='raid')SV.rp++;svDirty=1;checkQuests();newWorld(urlSeed);urlSeed=void 0;start()};
+ mode=m;job=j;if(noDif(m))dif=0;SV.ju[j]=1;SV.pc++;if(m=='raid')SV.rp++;svDirty=1;checkQuests();newWorld(urlSeed);urlSeed=void 0;start()};
+const CLR=[['水晶',['crystal0','crystal1','crystal2','crystal3'],'ENHX'],['討伐',['hunt0','hunt1','hunt2','hunt3'],'ENHX'],['レイド',['raid0','raid1','raid2','raid3'],'ENHX'],['エンドレス',['endless1','endless3','endless5','endless10'],['1','3','5','10']],['カオス',['chaos15','chaos50','chaos85','chaos150'],['15','50','85','150']]];
+const clrH=k=>{const c=SV.jc[k]||{};return '<div class="jcl">'+CLR.map(([n,ks,lb])=>'<span class="jg">'+n+' '+ks.map((x,i)=>'<i class="jc'+(c[x]?' on':'')+'">'+[...lb][i]+'</i>').join('')+'</span>').join('')+'</div>'}; // ジョブごとのクリア状況(E/N/H/X=イージー/ノーマル/ハード/エキスパート、数字=WAVE・撃破数)
 const bdg=n=>{let o='';for(let i=0;i<10;i++)o+='<i class="bd'+(i<n?' on':'')+'" style="--i:'+i+'"></i>';return o}; // 熟練バッジ(最大10個)
 function jobMenu(m,pg=0){ // ジョブ選択: 5人ずつページ分け。達成率・熟練バッジ・NEW・プラチナ枠
  state='menu';const per=5,pages=Math.ceil(JOBS.length/per);
  showOv('ジョブを選ぶ ('+(pg+1)+'/'+pages+')',MN[m]+(noDif(m)?'':' / '+DN[dif]),[...JOBS.slice(pg*per,pg*per+per).map((J,i)=>{const k=pg*per+i;
-  return SV.jobs[k]?[J.n+'\n'+J.d,()=>play(m,k),'job'+(SV.plat[k]?' plat':''),`<div class="jn">${J.n}${SV.nj[k]?'<span class="nw">NEW</span>':''}</div><div class="jd">${J.d.replace(/\n/g,'<br>')}</div><div class="jr">達成率 ${jobRate(SV,k)}%<span class="bds">${bdg(Math.floor(jobAchN(SV,k)/2))}</span></div>`]
-   :['🔒 '+J.n+'\n'+lockText('job',k),()=>{},3]}),
+  return SV.jobs[k]?[J.n+'\n'+J.d,()=>play(m,k),'job'+(SV.plat[k]?' plat':''),`<div class="jn">${J.n}${SV.nj[k]?'<span class="nw">NEW</span>':''}</div><div class="jd">${J.d.replace(/\n/g,'<br>')}</div><div class="jr">達成率 ${jobRate(SV,k)}%<span class="bds">${bdg(Math.floor(jobAchN(SV,k)/2))}</span></div>${clrH(k)}`]
+   :['🔒 '+J.n+'\n'+lockText('job',k),()=>{shopFrom=()=>jobMenu(m,pg);shopMenu()},3]}),
   ...(pg<pages-1?[['次のページ ▶',()=>jobMenu(m,pg+1),1]]:[]),...(pg>0?[['◀ 前のページ',()=>jobMenu(m,pg-1),1]]:[]),['戻る',()=>noDif(m)?menu():difMenu(m),1]])}
 const stickLabel=()=>'操作スティック: '+(stick?'表示中':'非表示')+'(タップで切替)';
 const aimLabel=()=>'敵へのエイム補正: '+(aimOn?'ON':'OFF')+'(タップで切替)';
@@ -903,13 +1076,22 @@ const MN={crystal:'水晶集めモード',hunt:'討伐モード',endless:'エン
 function menu(){state='menu';
  const D={crystal:'水晶集めモード\n水晶を10個集める(ハード15個・エキスパート20個)',hunt:'討伐モード\n敵を10体倒す(ハードは20体)',endless:'エンドレスモード\n終わりなきウェーブ。何ウェーブ耐える?',raid:'レイドバトル\n8人で特大ボスに挑む(難易度4段階)',chaos:'カオスモード\n常に15体の敵! 倒すと復活して体力+1'};
  const items=MODES.map(m=>SV.modes[m]?[D[m],()=>m=='crystal'||m=='hunt'||m=='raid'?difMenu(m):jobMenu(m),2]:['🔒 '+MN[m]+'\n'+lockText('mode',m),()=>{},3]);
- showOv('VOXEL DRIFT','モードを選んでください',[...items,['クエスト ('+QUESTS.filter(q=>qVis(q)&&SV.done[q.id]).length+'/'+QUESTS.filter(qVis).length+')',()=>{qFrom=menu;questMenu(0)},1]])}
+ showOv('VOXEL DRIFT',rankHTML()+`<div class="bank">所持XP <b>${SV.bank}</b>　XPカプセル <b>×${SV.cap}</b></div>モードを選んでください`,[...items,['ショップ',()=>{shopFrom=menu;shopMenu()},1],['クエスト ('+QUESTS.filter(q=>qVis(q)&&SV.done[q.id]).length+'/'+QUESTS.filter(qVis).length+')',()=>{qFrom=menu;questMenu(0)},1]])}
 function difMenu(m){state='menu';
  const T0=m=='raid'?['イージー\nボスが動かない・体力と攻撃力が半分','ノーマル\n標準の強さ','ハード\nボスが高速で動き体力1.5倍・体力50%で2種同時攻撃','エキスパート\n体力2倍・攻撃力150・召喚2倍・最後は全攻撃']
   :['イージー\n初心者向け','ノーマル\n敵が増えて強くなる','ハード\n敵が大量で強い','エキスパート\nハードより敵がタフで速い'+(m=='crystal'?'・水晶20個で逃げる':'')];
  showOv('難易度を選ぶ',MN[m],[...T0.map((t,d)=>diffOpen(m,d)?[t,()=>{dif=d;jobMenu(m)},2]:['🔒 '+DN[d]+'\n解禁条件: '+DN[d-1]+'をクリア',()=>{},3]),['戻る',menu,1]])}
-function resultScreen(t,m,nw){showOv(t,m+(nw.length?'<br><br>★クエスト<br>'+nw.join('<br>'):''),[['もう一度',()=>play(mode)],['ジョブ変更',()=>jobMenu(mode),1],['クエスト',()=>{qFrom=()=>resultScreen(t,m,nw);questMenu(0)},1],['メイン画面へ',menu,1]])}
-function end(s,t,m){state=s;resultScreen(t,m,recordEnd(s))}
+function resultScreen(t,m,nw,xh=''){showOv(t,m+xh+(nw.length?'<br><br>★クエスト<br>'+nw.join('<br>'):''),[['もう一度',()=>play(mode)],['ジョブ変更',()=>jobMenu(mode),1],['クエスト',()=>{qFrom=()=>resultScreen(t,m,nw,xh);questMenu(0)},1],['ショップ',()=>{shopFrom=()=>resultScreen(t,m,nw,xh);shopMenu()},1],['メイン画面へ',menu,1]])}
+const CXP={crystal:[100,300],hunt:[120,240],raid:[400,480]}; // [クリアXP, タイムボーナスの基準秒] (難易度で倍率アップ)
+function runGain(s){const L=[['撃破XP',runXP]],k=dif+1,ts=Math.floor(time);
+ if(s=='win'&&CXP[mode]){L.push(['クリアXP',CXP[mode][0]*k]);L.push(['タイムボーナス('+time.toFixed(1)+'秒)',Math.max(0,Math.round((CXP[mode][1]-time)*k))])}
+ if(mode=='endless'){L.push(['ウェーブXP(WAVE '+wave+')',wave*40]);L.push(['生存ボーナス('+ts+'秒)',ts])}
+ if(mode=='chaos')L.push(['生存ボーナス('+ts+'秒)',ts]);
+ return{L,sum:L.reduce((a,b)=>a+b[1],0)}}
+function end(s,t,m){state=s;const r0=rankOf(SV.xp).lv,x0=SV.bank,g=runGain(s);SV.bank+=g.sum;SV.tt+=time;if(mode=='chaos')SV.cb=Math.max(SV.cb,kills);
+ const nw=recordEnd(s),r=rankOf(SV.xp),tot=SV.bank-x0;
+ const xh='<div class="xpl">'+g.L.map(([a,b])=>`<div><span>${a}</span><b>+${b}</b></div>`).join('')+(tot>g.sum?`<div><span>クエスト報酬</span><b>+${tot-g.sum}</b></div>`:'')+`<div class="xpt"><span>獲得XP</span><b>+${tot}</b></div></div>`+`<div class="bank">所持XP <b>${SV.bank}</b>(ショップでランク・カプセルに使えます)</div>`+rankHTML();
+ resultScreen(t,m,nw,xh)}
 
 function hurt(a0){const a=kia>0?a0*.85:a0;pl.hp-=a;hitFX(pl.x,pl.y+1,pl.z,[1,.25,.45],6,1);if(job==4)rage=Math.min(100,rage+a0*2*(kia>0?2:1)); // きあいだめ中: 被ダメ15%軽減・怒りチャージ2倍
  const d=$('dm');d.style.transition='none';d.style.opacity=1;void d.offsetWidth;d.style.transition='opacity .6s';d.style.opacity=0}
@@ -963,6 +1145,7 @@ function update(dt){
   const dp=Math.hypot(pl.x-e.x,pl.z-e.z)-rad(e);if(dp<nd){nd=dp;ne=e}}
  for(let i=AL.length-1;i>=0;i--)if(AL[i].hp<=0){if(AL[i].t==2)healerLost=true;AL.splice(i,1)}
  if(DC&&DC.hp<=0)DC=null;
+ if(GM){pl.hp=pl.mhp;if(FT)FT.hp=FT.mhp} // GMモード: 無敵
  if(FT&&FT.hp<=0)return end('dead','砦が陥落…',`到達ウェーブ ${wave} / ${time.toFixed(0)} 秒`);
  let drag=0;for(const id in T)if(T[id].s==1)drag=1;
  if(aimOn&&ne&&!drag){ // 近い敵に照準が自動で向く(右側を触っている間は自分で操作)
@@ -971,6 +1154,7 @@ function update(dt){
   pitch+=(Math.atan2(dy,Math.hypot(dx,dz))-pitch)*k}
  if(mg<=0)spawnT+=dt;if((mode=='crystal'||mode=='hunt')&&spawnT>(hu?8:30)*DIF[dq()].spw){spawnT=0;if(EN.length<Math.round((hu?12:10)*DIF[dq()].cnt))spawnMix()}
  pl.hp=Math.min(pl.mhp,pl.hp+(hu?1:3)*DIF[dq()].reg*dt);
+ if(GM)pl.hp=pl.mhp;
  if(pl.hp<=0)end('dead','やられた…',(mode=='crystal'?`水晶 ${got}/${ncr}`:mode=='chaos'?`撃破 ${kills}`:mode=='endless'?`到達ウェーブ ${wave}`:mode=='raid'?`ボス残りHP ${BOSS?Math.ceil(Math.max(0,BOSS.hp)):0}`:`討伐 ${kills}/${dif>=2?20:10}`)+` / ${time.toFixed(0)} 秒`);
 }
 const AR=['↑','↗','→','↘','↓','↙','←','↖'];
@@ -982,7 +1166,7 @@ function hud(){
   n=`${mode=='crystal'?'水晶':'敵'} ${AR[(Math.round(a/(Math.PI/4))+8)%8]} ${Math.round(bd)}m`}
  const J=JOBS[job],te=aimEnemy();
  let jl=`【${J.n}】HP ${Math.ceil(Math.max(0,pl.hp))}/${pl.mhp}  攻撃 ${pAtk()}`;if(job==3)jl+=`  仲間 ${AL.filter(a=>!a.cpu).length}/12  ストック ${stock}`;if(job==1)jl+=`  (強化まで${pgNeed()-pgH}発)`;if(job==4&&kia>0)jl+=`  きあい${kia.toFixed(1)}s`;if(job==4&&tau>0)jl+=`  挑発${Math.ceil(tau)}s`;if(hot>0&&job==4)jl+=`  回復中${Math.ceil(hot)}s`;if(job==0&&skT>0)jl+=`  【${RN[lastSk]}!】`;if(job==0&&bf>0)jl+=`  バフ${bf.toFixed(1)}s`;if(job==6&&mg>0)jl+=`  マジック${mg.toFixed(1)}s マーク${EN.filter(e=>e.mk).length}`;if(job==8&&pl.hp<75)jl+='  【火力2倍】';if(job==8&&hold&&!DS)jl+=`  溜め${Math.floor(chg/3.5*100)}%`;if(job==5&&zg==2)jl+=`  ホバー${hov.toFixed(1)}s`;if(DC)jl+=`  身代わり ${Math.ceil(DC.hp)}/${DC.mhp}`;
- $('t').textContent=(mode=='crystal'?`水晶 ${got}/${ncr}  ブロック ${blocks}  撃破 ${kills}`:mode=='chaos'?`CHAOS  撃破 ${kills}  敵 ${EN.length}体  次のHP ${chaosHP+1}`:mode=='endless'?`WAVE ${wave}  敵 ${EN.length}体  砦 ${FT?Math.ceil(Math.max(0,FT.hp)):0}`:mode=='raid'?`レイド  パーティ ${1+AL.filter(a=>a.t>=10).length}/8  ブロック ${blocks}`:`討伐 ${kills}/${dif>=2?20:10}  ブロック ${blocks}`)+`\n${jl}\n${n}  ${noDif(mode)?'':DN[dif]}  seed ${seed}`+(te?`\n標的 HP ${Math.ceil(te.hp)}/${te.mhp}`:'');
+ $('t').textContent=(GM?'[GM] ':'')+(mode=='crystal'?`水晶 ${got}/${ncr}  ブロック ${blocks}  撃破 ${kills}`:mode=='chaos'?`CHAOS  撃破 ${kills}  敵 ${EN.length}体  次のHP ${chaosHP+1}`:mode=='endless'?`WAVE ${wave}  敵 ${EN.length}体  砦 ${FT?Math.ceil(Math.max(0,FT.hp)):0}`:mode=='raid'?`レイド  パーティ ${1+AL.filter(a=>a.t>=10).length}/8  ブロック ${blocks}`:`討伐 ${kills}/${dif>=2?20:10}  ブロック ${blocks}`)+`  XP +${runXP}\n${jl}\n${n}  ${noDif(mode)?'':DN[dif]}  seed ${seed}`+(te?`\n標的 HP ${Math.ceil(te.hp)}/${te.mhp}`:'');
  $('hpb').style.width=Math.max(0,pl.hp/pl.mhp*100)+'%';$('bs').textContent='置く: '+HN[sel];$('bA').textContent=J.btn;bossBar();
  const kb=$('bk'),hb=$('bh');kb.style.display=job<=8?'block':'none';hb.style.display=(job==0||job==3||job==4||job==5||job==6||job==7||job==8)?'block':'none';
  if(job==4){kb.textContent=rage>=100?'衝撃波!\n+回復':cdk>0?'きあい\n'+Math.ceil(cdk)+'s':'きあいだめ\n'+Math.floor(rage)+'%';kb.classList.toggle('rdy',rage>=100)}else if(job==3){kb.textContent='召喚\n×'+stock;kb.classList.toggle('rdy',stock>0)}else if(job==0){kb.textContent='必殺技\n'+Math.floor(sg)+'%';kb.classList.toggle('rdy',sg>=100)}else if(job==1||job==2){kb.textContent=(job==1?'身代わり':'ビーム')+(cdk>0?'\n'+Math.ceil(cdk)+'s':'');kb.classList.toggle('rdy',cdk<=0&&!DC)}
@@ -1023,14 +1207,16 @@ function drawEnemy(e){
  if(e.fly)drawDrone(e,P,c);
  else{
   const sx=gt?1.4:1,sp=gt?.3*s:0;
-  draw(cBuf,36,P,[s*sx,s,s],e.boss?0:Math.floor(time*3+e.ph)*1.5708,c); // 回転はカクカク
+  draw(cBuf,36,P,[s*sx,s,s],e.boss?(e.fa||0):Math.floor(time*3+e.ph)*1.5708,c); // 回転はカクカク
   glow([e.x-.08*s-sp,e.y,e.z],s*1.02,[1,.1,.2],.4);glow([e.x+.08*s+sp,e.y,e.z],s*1.02,[.1,.9,1],.4); // 色ずれ(赤/青)
   glow(P,s*1.35,c,.2);glow(P,s*1.9,c,.08)}
  if(Math.hypot(e.x-pl.x,e.z-pl.z)<45){ // ノイズのドット
   const np=e.boss?10:e.big?6:3;
   for(let i=0;i<np;i++){const an=rn(10+i)*6.283,rr=s*(.7+rn(20+i)*.8),dy=(rn(30+i)-.5)*s*1.4;
    draw(cBuf,36,[e.x+Math.cos(an)*rr,e.y+dy,e.z+Math.sin(an)*rr],(.07+.1*rn(40+i))*(e.boss?3:1),0,rn(50+i)>.5?[.6,1,1]:[1,.5,1])}}
- if(e.boss){for(const sg of[-1,1]){const q=[e.x+sg*1.3,e.y+.9,e.z+2.9];draw(cBuf,36,q,.7,0,[.3,1,1]);glow(q,1.6,[.3,1,1],.3)}} if(e.pz>0){for(let i=0;i<4;i++){const ph=(time*1.2+i*.25+e.ph)%1,q=[e.x+Math.sin(i*2.1+e.ph)*s*.5,e.y-s*.4+ph*s*1.6,e.z+Math.cos(i*2.1+e.ph)*s*.5];draw(cBuf,36,q,.14*(1-ph)+.04,0,i%2?[.7,.2,1]:[.5,1,.3]);glow(q,.4,[.7,.2,1],.3)}glow([e.x,e.y,e.z],s*1.8+Math.sin(time*8)*.2,[.6,.1,1],.18)} // 毒状態: 紫の泡と脈打つ光
+ if(e.boss){const fa=e.fa||0,fx=Math.sin(fa),fz=Math.cos(fa),ey=e.y+.7,ep=k=>[P[0]+fx*k,ey,P[2]+fz*k],lk=e.tl.length||e.bph>=3; // 大きな1つ目(弱点)
+  draw(cBuf,36,ep(1.9),2.2,fa,[1,.97,.92]);draw(cBuf,36,ep(2.5),1.25,fa,lk?[1,.15,.1]:[1,.55,.1]);draw(cBuf,36,ep(2.88),.6,fa,[.05,0,.05]);
+  glow(ep(3.2),2.4,lk?[1,.2,.1]:[1,.8,.3],.3)} if(e.pz>0){for(let i=0;i<4;i++){const ph=(time*1.2+i*.25+e.ph)%1,q=[e.x+Math.sin(i*2.1+e.ph)*s*.5,e.y-s*.4+ph*s*1.6,e.z+Math.cos(i*2.1+e.ph)*s*.5];draw(cBuf,36,q,.14*(1-ph)+.04,0,i%2?[.7,.2,1]:[.5,1,.3]);glow(q,.4,[.7,.2,1],.3)}glow([e.x,e.y,e.z],s*1.8+Math.sin(time*8)*.2,[.6,.1,1],.18)} // 毒状態: 紫の泡と脈打つ光
  if(e.atkdn>0){for(let i=0;i<8;i++){const a=i*.785,q=[e.x+Math.cos(a)*s*.8,e.y,e.z+Math.sin(a)*s*.8];draw(cBuf,36,q,.08,0,[.3,1,1])}} // 蜘蛛の巣で攻撃ダウン中
  if(e.lk){for(let i=0;i<4;i++){const a=time*3+i*1.571,q=[e.x+Math.cos(a)*s*.9,e.y+Math.sin(time*2)*.1,e.z+Math.sin(a)*s*.9];draw(cBuf,36,q,.12,0,[1,.1,.1]);glow(q,.4,[1,.1,.1],.4)}} // ロックオンの照準
  if(e.mk){const q=[e.x,e.y+(e.boss?4:ES.sm.s+.4)+Math.sin(time*6)*.1,e.z];draw(cBuf,36,q,[.3,.3,.3],time*4,[1,.9,.2]);glow(q,.9,[1,.9,.2],.4);glow([e.x,e.y,e.z],2.2,[1,.9,.2],.15)} // マーク
@@ -1056,6 +1242,7 @@ function loop(now){
   draw(cBuf,36,[m.x,gy+26*Math.max(0,m.t/1.8),m.z],1.3,time*3,[1,.45,.1])});
  EP.forEach(p=>{draw(cBuf,36,[p.x,p.y,p.z],.3,0,[1,.3,.7]);glow([p.x,p.y,p.z],.9,[1,.2,.6],.3);for(let k=1;k<=3;k++)glow([p.x-p.vx*.03*k,p.y-p.vy*.03*k,p.z-p.vz*.03*k],.7-.15*k,[1,.2,.6],.25)});
  EN.forEach(drawEnemy);
+ XO.forEach(o=>{const q=[o.x,o.y+Math.sin(time*8+o.ph)*.05,o.z],k=.85+.15*Math.sin(time*12+o.ph);draw(cBuf,36,q,.13*k,time*5+o.ph,[.75,1,.55]);glow(q,.5,[.55,1,.45],.45)}); // 経験値の粒
  if(HI){const q=[HI.x,HI.y+Math.sin(time*3)*.15,HI.z];draw(cBuf,36,q,.45,time*2,[.3,1,.45]);glow(q,.9,[.3,1,.45],.3);glow(q,1.6,[.3,1,.45],.12)}
  AL.forEach(a=>{const c=a.t>=10?JC[a.t-10]:AC[a.t],g=a.t==14;
   if(g){draw(cBuf,36,[a.x,a.y,a.z],[.95,1.5,.6],0,c);draw(cBuf,36,[a.x,a.y+1.03,a.z],.55,0,SKIN)}
